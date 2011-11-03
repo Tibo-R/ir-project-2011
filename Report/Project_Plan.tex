@@ -1,0 +1,65 @@
+% LaTeX Template for a short article
+% by Michael Stutz <stutz@dsl.org>
+% latest revision: 12 apr 2000
+% 
+% To use:
+%
+% Copy into a new file, replace all
+% [BRACKETED UPPER CASE TEXT]
+% with your own, then run the latex command on it.
+% Use dvips to print the .dvi output
+\documentclass[english,7pt]{article}
+\usepackage{pslatex}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{hyperref}
+\usepackage[scale=0.70]{geometry}
+\pagestyle{fancy}
+\fancyhf{}
+\chead{Rodrigo Doria Medina - Thibault Roucou }
+\title{Information Retrieval - Project Plan}
+\author{Rodrigo Doria Medina - Thibault Roucou }
+
+\begin{document}
+\maketitle
+
+
+\section{Overview}
+
+\paragraph{}The aim of the project is to use twitter to give recent relevant information to a user. For a specific Twitter account, our system will retrieve and give a specific score to every single document. These documents come from people followed by the user and also all the public tweet assuming that a higher score will be associated to the first class of documents.
+
+\paragraph{}Due to limitation in twitter API, the result will only be recent results (not older than a week). This is why we choose  to give a structured presentation of the results  using a newspaper style.The top ranked articles will be "headlines" of our newspaper whereas the last relevant results will be in the "brief" section of the page, with only small paragraph referring to it.
+
+\section{Description of the project}
+
+\paragraph{}We will retrieve different types of media shared on twitter :
+\begin{itemize}
+    \item Text
+    \item Videos
+    \item Images
+\end{itemize}
+
+\paragraph{}On twitter, most of the status contain a link. We will use these links to get the informations (text, images or videos), if there is no link,  the text of the tweet will be used as a quotation. 
+
+\paragraph{}For every document retrieved, we will provide the link, the title, an abstract (or the video or iamge). We can also retrieve images in the document itself, for instance the first image from the article will be used for the headlines. 
+
+
+\section{Evaluation of the results}
+
+\paragraph{}To evaluate the results, we only can use the user feedback because the results will be specific to her. So we will put a button next to each result so the user can tell herself if it is relevant or not. In this case we will be able to evaluate the system. This evaluation system can also be used to improve the result of the results provided to the user. 
+
+
+\section{Evolution}
+\paragraph{}The system can be also expand to other social networks like Google+ or Facebook.
+
+\section{Wireframe}
+\paragraph{}The following wireframe shows a mockup of what could look like the result provided by our system.
+ \begin{center}
+   \includegraphics[width=0.8\textwidth]{mockup.png}
+ \end{center}
+
+
+ 
+
+\end{document}

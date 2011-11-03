@@ -1,6 +1,5 @@
 package com.project.irproject.client;
 
-import com.project.irproject.shared.FieldVerifier;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -16,6 +15,10 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.project.irproject.shared.FieldVerifier;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
+
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -40,8 +43,9 @@ public class IRProject implements EntryPoint {
 	 */
 	public void onModuleLoad() {
 		final Button sendButton = new Button("Send");
+		sendButton.setText("Search");
 		final TextBox nameField = new TextBox();
-		nameField.setText("GWT User");
+		nameField.setText("Your search");
 		final Label errorLabel = new Label();
 
 		// We can add style names to widgets
@@ -49,12 +53,18 @@ public class IRProject implements EntryPoint {
 
 		// Add the nameField and sendButton to the RootPanel
 		// Use RootPanel.get() to get the entire body element
-		RootPanel.get("nameFieldContainer").add(nameField);
+		RootPanel rootPanel = RootPanel.get("nameFieldContainer");
+		rootPanel.add(nameField);
 		RootPanel.get("sendButtonContainer").add(sendButton);
+		sendButton.setSize("105px", "33px");
 		RootPanel.get("errorLabelContainer").add(errorLabel);
 
 		// Focus the cursor on the name field when the app loads
 		nameField.setFocus(true);
+		
+		final FlowPanel content = new FlowPanel();
+		rootPanel.add(content);
+//		content.setSize("430px", "187px");
 		nameField.selectAll();
 
 		// Create the popup dialog box
@@ -75,6 +85,9 @@ public class IRProject implements EntryPoint {
 		dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
 		dialogVPanel.add(closeButton);
 		dialogBox.setWidget(dialogVPanel);
+		
+		
+		
 
 		// Add a handler to close the DialogBox
 		closeButton.addClickHandler(new ClickHandler() {
@@ -120,7 +133,7 @@ public class IRProject implements EntryPoint {
 				textToServerLabel.setText(textToServer);
 				serverResponseLabel.setText("");
 				greetingService.greetServer(textToServer,
-						new AsyncCallback<String>() {
+						new AsyncCallback<String[]>() {
 							public void onFailure(Throwable caught) {
 								// Show the RPC error message to the user
 								dialogBox
@@ -132,13 +145,16 @@ public class IRProject implements EntryPoint {
 								closeButton.setFocus(true);
 							}
 
-							public void onSuccess(String result) {
+							public void onSuccess(String[] result) {
 								dialogBox.setText("Remote Procedure Call");
 								serverResponseLabel
 										.removeStyleName("serverResponseLabelError");
-								serverResponseLabel.setHTML(result);
-								dialogBox.center();
-								closeButton.setFocus(true);
+								for(int i=0; i<result.length; i++){
+									content.insert(new HTML("<div class='tweet'>" + result[i] + "</div>"), i);
+								}
+								
+//								dialogBox.center();
+//								closeButton.setFocus(true);
 							}
 						});
 			}
