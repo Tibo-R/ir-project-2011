@@ -25,40 +25,57 @@
 \maketitle
 
 
-\section{Overview}
-
-\paragraph{}The aim of the project is to use twitter to give recent relevant information to a user. For a specific Twitter account, our system will retrieve and give a specific score to every single document. These documents come from people followed by the user and also all the public tweet assuming that a higher score will be associated to the first class of documents.
-
-\paragraph{}Due to limitation in twitter API, the result will only be recent results (not older than a week). This is why we choose  to give a structured presentation of the results  using a newspaper style.The top ranked articles will be "headlines" of our newspaper whereas the last relevant results will be in the "brief" section of the page, with only small paragraph referring to it.
-
 \section{Description of the project}
 
-\paragraph{}We will retrieve different types of media shared on twitter :
+\paragraph{}Our project is a search engine specialized in \textbf{recent information} using a \textbf{newspaper style presentation}. This search engine will retrieve articles, images, videos and comments. To find our documents, we will use different sources : 
+
 \begin{itemize}
-    \item Text
-    \item Videos
-    \item Images
+    \item For articles : Google News
+    \item For videos : YouTube
+    \item For images : Flickr
+    \item For comments : Twitter and Google+
 \end{itemize}
 
-\paragraph{}On twitter, most of the status contain a link. We will use these links to get the informations (text, images or videos), if there is no link,  the text of the tweet will be used as a quotation. 
 
-\paragraph{}For every document retrieved, we will provide the link, the title, an abstract (or the video or iamge). We can also retrieve images in the document itself, for instance the first image from the article will be used for the headlines. 
+\paragraph{}The sources of documents will be Google News, Twitter, Google+, YouTube and Flickr. We will also use Twitter and Google+ to expand the user query. The most "popular" post will be used to search in the different engines. Using Social networks will allow us to find information that really interest people with the use of the public streams. We will also be able to give information which will be relevant for the user connected on the system using a ranking system based on trust in the people who posted the documents. We will also use built-in ranking system of each system, like for instance, the most recent and most viewed for the YouTube videos. But we will try to provide, when it's possible, very recent documents.
 
+\paragraph{}As a source, Twitter and Google+ will only be used for comments about the topics but we will not use the links provided in the posts.
+
+
+\paragraph{}Our ranking system will be used in the presentation of the results, the top ranked articles will be "headlines" of our newspaper whereas the last relevant results will be in the "brief" section of the page, with only small paragraph referring to it. For each headline, we will try to provide an article, one or more videos and one or more images. We will also provides post from twitter and Google+ as comments of the documents.
+
+\paragraph{}Social networks will also help us to find the best verticals for each query. If a query return 80\% of videos on Twitter and Google+, we will give a better rank on videos found on YouTube than on images found on Flickr for example.
 
 \section{Evaluation of the results}
 
-\paragraph{}To evaluate the results, we only can use the user feedback because the results will be specific to her. So we will put a button next to each result so the user can tell herself if it is relevant or not. In this case we will be able to evaluate the system. This evaluation system can also be used to improve the result of the results provided to the user. 
+\paragraph{}To evaluate the results, we only can use the user feedback because the results will be specific to her. So we will put a button next to each result so the user can tell herself if it is relevant or not. In this case we will be able to evaluate the system. This evaluation system can also be used to improve the result of the results provided to the user.
 
+\section{Scenario}
 
-\section{Evolution}
-\paragraph{}The system can be also expand to other social networks like Google+ or Facebook.
+\paragraph{}When a user access to the system, he can either choose one of the trending topics displayed from twitter and Google News or type her custom query in a searchbox. If she wants, she will be able to link her twitter and/or Google+ account in order to get personalized results.
 
-\section{Wireframe}
-\paragraph{}The following wireframe shows a mockup of what could look like the result provided by our system.
- \begin{center}
-   \includegraphics[width=0.8\textwidth]{mockup.png}
- \end{center}
+\paragraph{}The system will then process the query, and display the results in a newspaper like presentation. The user will therefore be able to play the videos, see the images, and read the articles and comments provided. For each document she will be able to express her opinion on the document by clicking on a button to say if the document is relevant or not for her.
 
+\paragraph{}Each time a document is said to be irrelevant, it will be replaced by another one from the next results.
+
+\section{Processing the query}
+\paragraph{}The internal system will work as follow : 
+
+\subsection{Receiving the query}
+\paragraph{}The query is entered by the user and sent to the system. The system will receive it and send it to Twitter and Google+. The results retrieved by the two API will be sorted and the system will extract the important keywords to expand the query. If the user is logged in on Twitter and/or Google+ the system will use relations between the users to define which post are the most relevant for the user.
+
+\paragraph{}The most popular results from Twitter and Google+ will be stored for later use as comments.
+
+\subsection{Querying the sources}
+\paragraph{}The query expanded will be sent to different APIs (Flickr, YouTube and GoogleNews) in order to get the documents. The aim is off course to find relevant documents but the system will try to focus on the more recent documents. The ranking system will therefore use a ranking system combining relevance and recentness.
+
+\paragraph{}The system will also use frequency of medias presents in the results from Twitter and Google+ to choose the percentage of medias to display in the final results compared to text. Indeed, if a query display 80\% of videos in Twitter, it means that the users probably wanted videos and in this case, we will promote results from YouTube.
+
+\subsection{Displaying the results}
+\paragraph{}After having ranked all the results, the system will display them to the user in a newspaper presentation with top ranked documents as headlines.
+
+\subsection{Receiving feedback}
+\paragraph{}The user will finally express some feedback by stating if a document is relevant or not. The system will stored all these feedbacks in order to be evaluated later. It can also be possible to use these feedback to improve the ranking system for this user, next time she uses the system.
 
  
 

@@ -1,5 +1,14 @@
 package com.project.irproject.client;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import com.bramosystems.oss.player.core.client.AbstractMediaPlayer;
+import com.bramosystems.oss.player.core.client.PlayerUtil;
+import com.bramosystems.oss.player.core.client.PluginNotFoundException;
+import com.bramosystems.oss.player.core.client.PluginVersionException;
+import com.bramosystems.oss.player.youtube.client.YouTubePlayer;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -16,8 +25,9 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.project.irproject.shared.FieldVerifier;
-import com.google.gwt.user.client.ui.FlexTable;
+import com.project.irproject.shared.SearchDoc;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.youtube.client.YouTubeEmbeddedPlayer;
 
 
 /**
@@ -49,6 +59,7 @@ public class IRProject implements EntryPoint {
 		final Label errorLabel = new Label();
 
 		// We can add style names to widgets
+
 		sendButton.addStyleName("sendButton");
 
 		// Add the nameField and sendButton to the RootPanel
@@ -61,10 +72,10 @@ public class IRProject implements EntryPoint {
 
 		// Focus the cursor on the name field when the app loads
 		nameField.setFocus(true);
-		
+
 		final FlowPanel content = new FlowPanel();
 		rootPanel.add(content);
-//		content.setSize("430px", "187px");
+		//		content.setSize("430px", "187px");
 		nameField.selectAll();
 
 		// Create the popup dialog box
@@ -85,9 +96,9 @@ public class IRProject implements EntryPoint {
 		dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
 		dialogVPanel.add(closeButton);
 		dialogBox.setWidget(dialogVPanel);
-		
-		
-		
+
+
+
 
 		// Add a handler to close the DialogBox
 		closeButton.addClickHandler(new ClickHandler() {
@@ -133,30 +144,54 @@ public class IRProject implements EntryPoint {
 				textToServerLabel.setText(textToServer);
 				serverResponseLabel.setText("");
 				greetingService.greetServer(textToServer,
-						new AsyncCallback<String[]>() {
-							public void onFailure(Throwable caught) {
-								// Show the RPC error message to the user
-								dialogBox
-										.setText("Remote Procedure Call - Failure");
-								serverResponseLabel
-										.addStyleName("serverResponseLabelError");
-								serverResponseLabel.setHTML(SERVER_ERROR);
-								dialogBox.center();
-								closeButton.setFocus(true);
-							}
-
-							public void onSuccess(String[] result) {
-								dialogBox.setText("Remote Procedure Call");
-								serverResponseLabel
-										.removeStyleName("serverResponseLabelError");
-								for(int i=0; i<result.length; i++){
-									content.insert(new HTML("<div class='tweet'>" + result[i] + "</div>"), i);
+						new AsyncCallback<List<SearchDoc>>() {
+					public void onFailure(Throwable caught) {
+						// Show the RPC error message to the user
+						dialogBox
+						.setText("Remote Procedure Call - Failure");
+						serverResponseLabel
+						.addStyleName("serverResponseLabelError");
+						serverResponseLabel.setHTML(SERVER_ERROR);
+						dialogBox.center();
+						closeButton.setFocus(true);
+					}
+					public void onSuccess(List<SearchDoc> result) {
+						dialogBox.setText("Remote Procedure Call");
+						serverResponseLabel
+						.removeStyleName("serverResponseLabelError");
+						if((result != null) && (result.size() > 0)){
+							for(SearchDoc doc:result){
+								if(doc.getType().equals("youtube")){
+									AbstractMediaPlayer player = null;
+									try {
+									     // create the player, specifing URL of media
+									     player = new YouTubePlayer("http://www.youtube.com/v/" + doc.getUrl(), "560px", "315px");
+									     content.add(player); // add player to panel.
+									} catch(PluginVersionException e) {
+									     // required Flash plugin version is not available,
+									     // alert user possibly providing a link to the plugin download page.
+									     content.add(new HTML(".. some nice message telling the " +
+									           "user to download plugin first .."));
+									} catch(PluginNotFoundException e) {
+									     // required Flash plugin not found, display a friendly notice.
+										content.add(PlayerUtil.getMissingPluginNotice(e.getPlugin()));
+									}
+////									YouTubeEmbeddedPlayer youTubeEmbeddedPlayer = new YouTubeEmbeddedPlayer(doc.getUrl());
+////									youTubeEmbeddedPlayer.setWidth("427px");
+////									youTubeEmbeddedPlayer.setHeight("320px");
+////									content.add(youTubeEmbeddedPlayer);
+//									content.insert(new HTML("<div class='result'>" + doc.getTitle() + " : <iframe width=\"560\" height=\"315\" src=\"http://www.youtube.com/v/" + doc.getUrl() + "\" frameborder=\"0\" allowfullscreen></iframe></div>"), 0);
 								}
-								
-//								dialogBox.center();
-//								closeButton.setFocus(true);
+									else
+										content.insert(new HTML("<div class='result'>" + doc.getTitle() + " : " + doc.getUrl() + "</div>"), 0);
 							}
-						});
+						}
+
+						//								dialogBox.center();
+						//								closeButton.setFocus(true);
+					}
+
+				});
 			}
 		}
 

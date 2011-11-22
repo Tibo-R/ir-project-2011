@@ -1,0 +1,2 @@
+serviceClass: com.project.irproject.client.GreetingService
+path: A2126C2291C2D14020219B567A0F9A68.gwt.rpc

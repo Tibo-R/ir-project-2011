@@ -11,8 +11,12 @@
   <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
-  <!-- Other module inherits                                      -->
-
+  <!-- Other module inherits                                      
+  <inherits name='com.google.youtube.Player'/>
+  <inherits name='com.google.gwt.junit.JUnit'/>-->
+  <inherits name='com.bramosystems.oss.player.core.Core'/>
+  <inherits name='com.bramosystems.oss.player.youtube.YouTube'/>
+  
   <!-- Specify the app entry point class.                         -->
   <entry-point class='com.project.irproject.client.IRProject'/>
 
