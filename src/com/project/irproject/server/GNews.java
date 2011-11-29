@@ -22,13 +22,15 @@ public class GNews implements Source{
 		URL feedUrl;
 		List<SearchDoc> docs = new ArrayList<SearchDoc>();
 		try {
-			feedUrl = new URL("http://news.google.com/news?q=" + query + "&output=rss");
+			query = java.net.URLEncoder.encode(query, "ISO-8859-1");
+			feedUrl = new URL("http://news.google.com/news?q=" + query + "&output=rss&as_qdr=w");
 			SyndFeedInput input = new SyndFeedInput();
 			SyndFeed feed = input.build(new XmlReader(feedUrl));
 			for (final Iterator<?> iter = feed.getEntries().iterator(); iter.hasNext();)
 			{
 				final SyndEntry entry = (SyndEntry) iter.next();
-				SearchDoc doc = new SearchDoc(entry.getTitle(), "news", entry.getUri());
+				SearchDoc doc = new SearchDoc(entry.getTitle(), "news", entry.getLink());
+				doc.setSummary(entry.getDescription().getValue());
 				docs.add(doc);
 			}
 

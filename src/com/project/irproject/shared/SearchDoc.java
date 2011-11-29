@@ -15,6 +15,7 @@ public class SearchDoc implements IsSerializable{
 	private String url;
 //	private Object source;
 	private double score;
+	private String summary;
 	
 //	public static SearchDoc addDoc(String type, String url, Object post){
 //		if(!links.containsKey(url)){
@@ -35,6 +36,7 @@ public class SearchDoc implements IsSerializable{
 		this.title = title;
 		this.type = type;
 		this.url = url;
+		this.summary = null;
 //		this.source = source;
 	}
 	
@@ -94,6 +96,20 @@ public class SearchDoc implements IsSerializable{
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
+	
+	public boolean hasSummary() {
+		if(summary != null)
+			return true;
+		return false;
 	}
 
 

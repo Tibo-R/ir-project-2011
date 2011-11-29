@@ -183,7 +183,7 @@ public class IRProject implements EntryPoint {
 //									content.insert(new HTML("<div class='result'>" + doc.getTitle() + " : <iframe width=\"560\" height=\"315\" src=\"http://www.youtube.com/v/" + doc.getUrl() + "\" frameborder=\"0\" allowfullscreen></iframe></div>"), 0);
 								}
 									else
-										content.insert(new HTML("<div class='result'>" + doc.getTitle() + " : " + doc.getUrl() + "</div>"), 0);
+										content.insert(new HTML("<div class='result'><h2>" + doc.getTitle() + " : </h2>" + (doc.hasSummary() ? doc .getSummary() : doc.getUrl()) + "</div>"), 0);
 							}
 						}
 

@@ -1,6 +1,7 @@
 package com.project.irproject.server;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -21,25 +22,22 @@ GreetingService {
 			// If the input is not valid, throw an IllegalArgumentException back to
 			// the client.
 			throw new IllegalArgumentException(
-					"Name must be at least 4 characters long");
+					"Name must be at least 2 characters long");
 		}
 		String userAgent = getThreadLocalRequest().getHeader("User-Agent");
 
 		// Escape data from the client to avoid cross-site script vulnerabilities.
 		input = escapeHtml(input);
 		userAgent = escapeHtml(userAgent);
-//		Map<String, SearchDoc> docsRetr = null;
-//		Twitter twitter = new TwitterFactory().getInstance();
-//		try {
-//			
-//			Query query = new Query(input);
-//			query.setRpp(20);
-//			QueryResult result = twitter.search(query);
-//			docsRetr = getAllDocs(result.getTweets());
-//		} catch (TwitterException te) {
-//			te.printStackTrace();
-//			System.out.println("Failed to search tweets: " + te.getMessage());
+		
+//		Twitter twitterSource = new Twitter();
+//		ArrayList<String> wordsForExpansion = twitterSource.getWordsForExpansion(input);
+//		
+//		for(String s : wordsForExpansion){
+//			input += " " + s;
 //		}
+//		input = escapeHtml(input);
+//		System.out.println("Query expanded : " + input);
 		
 		Youtube ytSource = new Youtube();
 		List<SearchDoc> docsRetr = ytSource.search(input);
