@@ -47,6 +47,9 @@ GreetingService {
 		GNews gnSource = new GNews();
 		docsRetr.addAll(gnSource.search(input));
 		
+		Flick flSource = new Flick();
+		docsRetr.addAll(flSource.search(input));
+		
 		return docsRetr;
 	}
 
