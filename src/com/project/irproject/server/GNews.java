@@ -34,7 +34,7 @@ public class GNews implements Source{
 				docs.add(doc);
 			}
 
-			return docs;
+			return Ranking.setResultScore(docs);
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

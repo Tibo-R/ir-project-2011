@@ -52,8 +52,8 @@ public class Youtube implements Source{
 		try {
 			
 			videoFeed = service.query(youtubeQuery, VideoFeed.class);
-			System.out.println("got it !");
-			return docsFromVideoFeed(videoFeed, true);
+			List<SearchDoc> docs = docsFromVideoFeed(videoFeed, true);
+			return Ranking.setResultScore(docs);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

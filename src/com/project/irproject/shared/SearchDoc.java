@@ -6,7 +6,7 @@ import java.util.Map;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-public class SearchDoc implements IsSerializable{
+public class SearchDoc implements IsSerializable, Comparable{
 
 	public static Map<String, SearchDoc> links = new HashMap<String, SearchDoc>();
 	
@@ -37,6 +37,7 @@ public class SearchDoc implements IsSerializable{
 		this.type = type;
 		this.url = url;
 		this.summary = null;
+		this.score = 0;
 //		this.source = source;
 	}
 	
@@ -45,6 +46,7 @@ public class SearchDoc implements IsSerializable{
 		this.title = "";
 		this.type = "";
 		this.url = "";
+		this.score = 0;
 //		this.source = null;
 	}
 
@@ -85,7 +87,10 @@ public class SearchDoc implements IsSerializable{
 	public void setScore(double score) {
 		this.score = score;
 	}
-
+	
+	public void increaseScore(double score) {
+		this.score += score;
+	}
 
 
 	public String getTitle() {
@@ -110,6 +115,18 @@ public class SearchDoc implements IsSerializable{
 		if(summary != null)
 			return true;
 		return false;
+	}
+
+	@Override
+	public int compareTo(Object obj) {
+        if (obj instanceof SearchDoc) {
+        	SearchDoc doc = (SearchDoc) obj;
+            if (this.score < doc.getScore())
+                return 1;
+            else if (this.score > doc.getScore())
+                return -1;
+        }
+		return 0;
 	}
 
 

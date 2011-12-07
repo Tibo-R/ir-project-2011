@@ -8,5 +8,5 @@ import com.project.irproject.shared.SearchDoc;
 public interface Source extends IsSerializable{
 	
 	public List<SearchDoc> search(String query);
-
+	
 }

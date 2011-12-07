@@ -3,6 +3,7 @@ package com.project.irproject.server;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.project.irproject.client.GreetingService;
@@ -15,6 +16,7 @@ import com.project.irproject.shared.FieldVerifier;
 @SuppressWarnings("serial")
 public class GreetingServiceImpl extends RemoteServiceServlet implements
 GreetingService {
+	long startTime = System.currentTimeMillis();
 
 	public List<SearchDoc> greetServer(String input) throws IllegalArgumentException {
 		// Verify that the input is valid. 
@@ -48,6 +50,16 @@ GreetingService {
 		Flick flSource = new Flick();
 		docsRetr.addAll(flSource.search(input));
 		
+		docsRetr = Ranking.getTopResults(docsRetr, 20);
+		
+	    long stopTime = System.currentTimeMillis();
+	    long elapsedTime = stopTime - startTime;
+	    System.out.println("Ended at : " + String.format("%d min, %d sec", 
+				TimeUnit.MILLISECONDS.toMinutes(elapsedTime),
+				TimeUnit.MILLISECONDS.toSeconds(elapsedTime) - 
+				TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(elapsedTime))
+				)
+				);
 		return docsRetr;
 	}
 

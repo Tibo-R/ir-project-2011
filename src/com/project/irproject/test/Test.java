@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import com.google.gdata.client.Service;
 import com.google.gdata.client.youtube.YouTubeQuery;
@@ -32,10 +33,23 @@ public class Test {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException, ServiceException {
+		long startTime = System.currentTimeMillis();
 		Twitter t = new Twitter();
-		System.out.println(t.getWordsForExpansion("obama"));
-		
-	
+		System.out.println(t.getMediaFrequency("video", true));
+		System.out.println("------------------------------------");
+		System.out.println("         SANS LES EXPANSIONS        ");
+		System.out.println("------------------------------------");
+		System.out.println(t.getMediaFrequency("video"));
+
+		long stopTime = System.currentTimeMillis();
+		long elapsedTime = stopTime - startTime;
+		//System.out.println("Results given in : " + elapsedTime);
+		System.out.println("Started at : " + String.format("%d min, %d sec", 
+				TimeUnit.MILLISECONDS.toMinutes(elapsedTime),
+				TimeUnit.MILLISECONDS.toSeconds(elapsedTime) - 
+				TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(elapsedTime))
+				)
+				);
 	}
 
 

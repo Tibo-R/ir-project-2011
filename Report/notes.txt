@@ -1,0 +1,10 @@
+Requête "obama" : 
+
+urlExpansion :    {image=9.0, none=872.0, video=44.0}
+pas d'expansion : {image=3.0, none=997.0, video=27.0}
+
+
+Requête "video" : 
+
+urlExpansion :    {image=0.0, none=527.0, video=351.0}
+pas d'expansion : {image=1.0, none=743.0, video=280.0}

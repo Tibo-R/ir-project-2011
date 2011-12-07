@@ -58,10 +58,9 @@ public class Flick implements Source {
 		  
 		  for(int i = 0 ; i < matching_photos.size() ; i ++){
 			Photo photo=(Photo)matching_photos.get(i);
-			docs.add(new SearchDoc(photo.getTitle(), "flickr", photo.getUrl()) );
-			System.out.println(photo.getMediumUrl());
+			docs.add(new SearchDoc(photo.getTitle(), "flickr", photo.getMediumUrl()) );
 		  }
-		  return docs;
+		  return Ranking.setResultScore(docs);
 		}
 	    catch (IOException e) {
 		// TODO Auto-generated catch block
