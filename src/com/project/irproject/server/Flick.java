@@ -2,7 +2,9 @@ package com.project.irproject.server;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Date;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -37,8 +39,18 @@ public class Flick implements Source {
 		
 		List<SearchDoc> docs = new ArrayList<SearchDoc>();
 		SearchParameters param = new SearchParameters();
+		
+		Calendar calendar = Calendar.getInstance();
+		param.setMaxTakenDate(calendar.getTime());
+		param.setMaxUploadDate(calendar.getTime());
+		
+		calendar.roll(Calendar.DAY_OF_YEAR, -7);
+		
 		param.setText(query);
 		param.setSort(SearchParameters.INTERESTINGNESS_DESC);
+		param.setMinTakenDate(calendar.getTime());
+		param.setMinUploadDate(calendar.getTime());
+	
 		PhotoList matching_photos = null;
 		
 		try{
@@ -47,7 +59,7 @@ public class Flick implements Source {
 		  for(int i = 0 ; i < matching_photos.size() ; i ++){
 			Photo photo=(Photo)matching_photos.get(i);
 			docs.add(new SearchDoc(photo.getTitle(), "flickr", photo.getUrl()) );
-			
+			System.out.println(photo.getMediumUrl());
 		  }
 		  return docs;
 		}
