@@ -75,8 +75,8 @@ public class IRProject implements EntryPoint {
 		nameField.setFocus(true);
 
 		final FlowPanel content = new FlowPanel();
-		rootPanel.add(content);
-		//		content.setSize("430px", "187px");
+		RootPanel.get("contentContainer").add(content);
+//		rootPanel.add(content);
 		nameField.selectAll();
 
 		// Create the popup dialog box
@@ -157,44 +157,15 @@ public class IRProject implements EntryPoint {
 						closeButton.setFocus(true);
 					}
 					public void onSuccess(List<SearchDoc> result) {
+						content.clear();
 						dialogBox.setText("Remote Procedure Call");
-						serverResponseLabel
-						.removeStyleName("serverResponseLabelError");
+						serverResponseLabel.removeStyleName("serverResponseLabelError");
+
 						if((result != null) && (result.size() > 0)){
 							for(SearchDoc doc:result){
-//								System.out.println(doc.getTitle() + " : " + doc.getScore());
-								if(doc.getType().equals("youtube")){
-									AbstractMediaPlayer player = null;
-									try {
-										// create the player, specifing URL of media
-										player = new YouTubePlayer("http://www.youtube.com/v/" + doc.getUrl(), "560px", "315px");
-										content.add(player); // add player to panel.
-									} catch(PluginVersionException e) {
-										// required Flash plugin version is not available,
-										// alert user possibly providing a link to the plugin download page.
-										content.add(new HTML(".. some nice message telling the " +
-												"user to download plugin first .."));
-									} catch(PluginNotFoundException e) {
-										// required Flash plugin not found, display a friendly notice.
-										content.add(PlayerUtil.getMissingPluginNotice(e.getPlugin()));
-									}
-									////									YouTubeEmbeddedPlayer youTubeEmbeddedPlayer = new YouTubeEmbeddedPlayer(doc.getUrl());
-									////									youTubeEmbeddedPlayer.setWidth("427px");
-									////									youTubeEmbeddedPlayer.setHeight("320px");
-									////									content.add(youTubeEmbeddedPlayer);
-									//									content.insert(new HTML("<div class='result'>" + doc.getTitle() + " : <iframe width=\"560\" height=\"315\" src=\"http://www.youtube.com/v/" + doc.getUrl() + "\" frameborder=\"0\" allowfullscreen></iframe></div>"), 0);
-								}
-								else if(doc.getType().equals("flickr")){
-									Image img = new Image(doc.getUrl());
-									img.setAltText(doc.getTitle());
-									img.setTitle(doc.getTitle());
-									content.add(img);
-								}
-								else{
-									HTML widget = new HTML("<div class='result'><h2>" + doc.getTitle() + " : </h2>" + (doc.hasSummary() ? doc .getSummary() : doc.getUrl()) + "</div>");
-									content.add(widget);
-
-								}
+								//								System.out.println(doc.getTitle() + " : " + doc.getScore());
+								Result res = new Result(doc);
+								content.add(res);
 							}
 						}
 
