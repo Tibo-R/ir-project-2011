@@ -16,6 +16,16 @@
     <url-pattern>/irproject/greet</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+    <servlet-name>sendResultsImpl</servlet-name>
+    <servlet-class>com.project.irproject.server.SendResultsImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>sendResultsImpl</servlet-name>
+    <url-pattern>/irproject/sendResults</url-pattern>
+  </servlet-mapping>
+  
 	  
   <!-- Default page to serve -->
   <welcome-file-list>

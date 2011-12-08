@@ -1,14 +1,6 @@
 package com.project.irproject.client;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
-import com.bramosystems.oss.player.core.client.AbstractMediaPlayer;
-import com.bramosystems.oss.player.core.client.PlayerUtil;
-import com.bramosystems.oss.player.core.client.PluginNotFoundException;
-import com.bramosystems.oss.player.core.client.PluginVersionException;
-import com.bramosystems.oss.player.youtube.client.YouTubePlayer;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -20,7 +12,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -28,7 +19,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.project.irproject.shared.FieldVerifier;
 import com.project.irproject.shared.SearchDoc;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.youtube.client.YouTubeEmbeddedPlayer;
 
 
 /**
@@ -48,6 +38,12 @@ public class IRProject implements EntryPoint {
 	 */
 	private final GreetingServiceAsync greetingService = GWT
 			.create(GreetingService.class);
+	
+	/**
+	 * Create a remote service proxy to talk to the server-side Greeting service.
+	 */
+	private final SendResultsServiceAsync sendResultsService = GWT
+			.create(SendResultsService.class);
 
 	/**
 	 * This is the entry point method.
@@ -58,7 +54,11 @@ public class IRProject implements EntryPoint {
 		final TextBox nameField = new TextBox();
 		nameField.setText("Your search");
 		final Label errorLabel = new Label();
-
+		
+		
+		
+		final Button endButton = new Button("Send Results");
+		
 		// We can add style names to widgets
 
 		sendButton.addStyleName("sendButton");
@@ -70,6 +70,7 @@ public class IRProject implements EntryPoint {
 		RootPanel.get("sendButtonContainer").add(sendButton);
 		sendButton.setSize("105px", "33px");
 		RootPanel.get("errorLabelContainer").add(errorLabel);
+		
 
 		// Focus the cursor on the name field when the app loads
 		nameField.setFocus(true);
@@ -134,7 +135,7 @@ public class IRProject implements EntryPoint {
 			private void sendNameToServer() {
 				// First, we validate the input.
 				errorLabel.setText("");
-				String textToServer = nameField.getText();
+				final String textToServer = nameField.getText();
 				if (!FieldVerifier.isValidName(textToServer)) {
 					errorLabel.setText("Please enter at least four characters");
 					return;
@@ -156,7 +157,7 @@ public class IRProject implements EntryPoint {
 						dialogBox.center();
 						closeButton.setFocus(true);
 					}
-					public void onSuccess(List<SearchDoc> result) {
+					public void onSuccess(final List<SearchDoc> result) {
 						content.clear();
 						dialogBox.setText("Remote Procedure Call");
 						serverResponseLabel.removeStyleName("serverResponseLabelError");
@@ -167,6 +168,58 @@ public class IRProject implements EntryPoint {
 								Result res = new Result(doc);
 								content.add(res);
 							}
+							
+							
+							
+							
+							class EndHandler implements ClickHandler {
+								/**
+								 * Fired when the user clicks on the sendButton.
+								 */
+								public void onClick(ClickEvent event) {
+									sendClickToServer();
+								}
+
+
+								/**
+								 * Send the name from the nameField to the server and wait for a response.
+								 */
+								private void sendClickToServer() {
+
+									// Then, we send the input to the server.
+									endButton.setEnabled(false);
+									sendResultsService.sendResults(textToServer, result, 
+											new AsyncCallback<Boolean>() {
+										public void onFailure(Throwable caught) {
+											// Show the RPC error message to the user
+											dialogBox
+											.setText("Remote Procedure Call - Failure");
+											serverResponseLabel
+											.addStyleName("serverResponseLabelError");
+											serverResponseLabel.setHTML(SERVER_ERROR);
+											dialogBox.center();
+											closeButton.setFocus(true);
+										}
+										public void onSuccess(Boolean result) {
+											// Show the RPC error message to the user
+											dialogBox
+											.setText("Email sent !!!");
+											dialogBox.center();
+											closeButton.setFocus(true);
+										}
+
+									});
+								}
+							}
+							
+							RootPanel.get("endButtonContainer").add(endButton);
+							EndHandler handler = new EndHandler();
+							endButton.addClickHandler(handler);
+							
+							
+							
+							
+							
 						}
 
 						//								dialogBox.center();
@@ -176,6 +229,33 @@ public class IRProject implements EntryPoint {
 				});
 			}
 		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 
 		// Add a handler to send the name to the server
 		MyHandler handler = new MyHandler();

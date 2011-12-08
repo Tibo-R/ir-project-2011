@@ -9,13 +9,16 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 public class SearchDoc implements IsSerializable, Comparable{
 
 	public static Map<String, SearchDoc> links = new HashMap<String, SearchDoc>();
+	public static int currentId = 1;
 	
+	public int id;
 	private String title;
 	private String type;
 	private String url;
 //	private Object source;
 	private double score;
 	private String summary;
+	private int relevant; //-1 = not relevant; 0 = don't know, 1 = relevant
 	
 //	public static SearchDoc addDoc(String type, String url, Object post){
 //		if(!links.containsKey(url)){
@@ -31,6 +34,14 @@ public class SearchDoc implements IsSerializable, Comparable{
 //	
 
 
+	public int getRelevant() {
+		return relevant;
+	}
+
+	public void setRelevant(int relevant) {
+		this.relevant = relevant;
+	}
+
 	public SearchDoc(String title, String type, String url) {
 		super();
 		this.title = title;
@@ -38,6 +49,8 @@ public class SearchDoc implements IsSerializable, Comparable{
 		this.url = url;
 		this.summary = null;
 		this.score = 0;
+		this.relevant = 0;
+		this.id = currentId++;
 //		this.source = source;
 	}
 	
@@ -47,15 +60,9 @@ public class SearchDoc implements IsSerializable, Comparable{
 		this.type = "";
 		this.url = "";
 		this.score = 0;
+		this.relevant = 0;
+		this.id = currentId++;
 //		this.source = null;
-	}
-
-	private SearchDoc(String type, String url, Object post) {
-		super();
-		this.type = type;
-		this.url = url;
-		this.score = 1;
-		links.put(url, this);
 	}
 
 
@@ -127,6 +134,22 @@ public class SearchDoc implements IsSerializable, Comparable{
                 return -1;
         }
 		return 0;
+	}
+
+	public static int getCurrentId() {
+		return currentId;
+	}
+
+	public static void setCurrentId(int currentId) {
+		SearchDoc.currentId = currentId;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 
