@@ -59,8 +59,8 @@ public class Result extends Composite {
 			widget.add(html);
 
 		}
-		
-		
+
+
 		// Make some radio buttons, all in one group.
 		RadioButton relevant = new RadioButton("relevanceButton" + document.getId(), "Relevant");
 		RadioButton notRelevant = new RadioButton("relevanceButton" + document.getId(), "Not Relevant");
@@ -110,28 +110,28 @@ public class Result extends Composite {
 		relevanceButtonPanel.add(notRelevant);
 		relevanceButtonPanel.add(dontKnow);
 		widget.add(relevanceButtonPanel);
-		
+
 		relevanceButtonPanel.setVisible(false);
-		}
-	
+	}
+
 	@Override
 	public void onBrowserEvent(Event event)
 	{
 		switch(DOM.eventGetType(event)) {
-			case Event.ONMOUSEOVER:
-				relevanceButtonPanel.setVisible(true);
-				this.addStyleName("hover");
-				break;
-				
-			case Event.ONMOUSEOUT:
-				relevanceButtonPanel.setVisible(false);
-				this.removeStyleName("hover");
-				break;
-			default:
-        break;
+		case Event.ONMOUSEOVER:
+			relevanceButtonPanel.setVisible(true);
+			this.addStyleName("hover");
+			break;
+
+		case Event.ONMOUSEOUT:
+			relevanceButtonPanel.setVisible(false);
+			this.removeStyleName("hover");
+			break;
+		default:
+			break;
 		}
 	}
 
-	}
+}
 
 

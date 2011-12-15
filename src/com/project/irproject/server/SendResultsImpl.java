@@ -19,31 +19,64 @@ import javax.mail.internet.MimeMessage;
 public class SendResultsImpl extends RemoteServiceServlet implements SendResultsService{
 
 	@Override
-	public Boolean sendResults(String query, List<SearchDoc> docs) {
+	public Boolean sendResults(String query, List<SearchDoc> docsBaseline) {
 		Properties props = new Properties();
-        Session session = Session.getDefaultInstance(props, null);
+		Session session = Session.getDefaultInstance(props, null);
 
-        String msgBody = "Query : " + query;
-        int i=1;
-        for(SearchDoc doc : docs){
-        	msgBody += "\n" + i++ + " : " + doc.getRelevant();
-        }
-        
+		double pAtFive = 0;
+		double pAtTen = 0;
+		double pAtTwenty = 0;
+		int nbNone = 0;
+		int nbNotRelevant = 0;
+		
+		String msgBody = "Query : " + query;
+		int i=1;
+		for(SearchDoc doc : docsBaseline){
+			if(doc.getRelevant() == 1){
+				if(i <= 5){
+					pAtFive++;
+				}
+				if(i <= 10){
+					pAtTen++;
+				}
+				pAtTwenty++;
+			}
+			else if(doc.getRelevant() == -1)
+				nbNotRelevant++;
+			else nbNone++;
+			msgBody += "\n" + i++ + " : " + doc.getRelevant();
+		}
+		
+		msgBody += "\n Nb relevant : " + pAtTwenty;
+		msgBody += "\n Nb not relevant : " + nbNotRelevant;
+		msgBody += "\n Nb don't know : " + nbNone;
+		
+		pAtFive = pAtFive/5d;
+		pAtTen = pAtTen/10d;
+		pAtTwenty = pAtTwenty/20d;
+		
+		msgBody += "\n P@5 : " + pAtFive;
+		msgBody += "\n P@10 : " + pAtTen;
+		msgBody += "\n P@20 : " + pAtTwenty;
 
-        try {
-            Message msg = new MimeMessage(session);
-            msg.setFrom(new InternetAddress("thibault.roucou@gmail.com", "IRPROJECT"));
-            msg.addRecipient(Message.RecipientType.TO,
-                             new InternetAddress("thibault.roucou+irproject@gmail.com", "Thibault"));
-            msg.setSubject("A new user has tested the project");
-            msg.setText(msgBody);
-            Transport.send(msg);
-    
-        } catch (AddressException e) {
-            // ...
-        } catch (MessagingException e) {
-            // ...
-        } catch (UnsupportedEncodingException e) {
+
+		System.out.println(msgBody);
+		try {
+			Message msg = new MimeMessage(session);
+			msg.setFrom(new InternetAddress("thibault.roucou@gmail.com", "IRPROJECT"));
+			msg.addRecipient(Message.RecipientType.TO,
+					new InternetAddress("thibault.roucou+irproject@gmail.com", "Thibault"));
+			msg.addRecipient(Message.RecipientType.TO,
+					new InternetAddress("rdoria1+irproject@gmail.com", "Rodrigo"));
+			msg.setSubject("Results for : " + query);
+			msg.setText(msgBody);
+			Transport.send(msg);
+
+		} catch (AddressException e) {
+			// ...
+		} catch (MessagingException e) {
+			// ...
+		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

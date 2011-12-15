@@ -38,7 +38,7 @@ public class IRProject implements EntryPoint {
 	 */
 	private final GreetingServiceAsync greetingService = GWT
 			.create(GreetingService.class);
-	
+
 	/**
 	 * Create a remote service proxy to talk to the server-side Greeting service.
 	 */
@@ -54,11 +54,11 @@ public class IRProject implements EntryPoint {
 		final TextBox nameField = new TextBox();
 		nameField.setText("Your search");
 		final Label errorLabel = new Label();
-		
-		
-		
+
+
+
 		final Button endButton = new Button("Send Results");
-		
+
 		// We can add style names to widgets
 
 		sendButton.addStyleName("sendButton");
@@ -70,14 +70,14 @@ public class IRProject implements EntryPoint {
 		RootPanel.get("sendButtonContainer").add(sendButton);
 		sendButton.setSize("105px", "33px");
 		RootPanel.get("errorLabelContainer").add(errorLabel);
-		
+
 
 		// Focus the cursor on the name field when the app loads
 		nameField.setFocus(true);
 
 		final FlowPanel content = new FlowPanel();
 		RootPanel.get("contentContainer").add(content);
-//		rootPanel.add(content);
+		//		rootPanel.add(content);
 		nameField.selectAll();
 
 		// Create the popup dialog box
@@ -142,7 +142,6 @@ public class IRProject implements EntryPoint {
 				}
 
 				// Then, we send the input to the server.
-				sendButton.setEnabled(false);
 				textToServerLabel.setText(textToServer);
 				serverResponseLabel.setText("");
 				greetingService.greetServer(textToServer,
@@ -164,14 +163,15 @@ public class IRProject implements EntryPoint {
 
 						if((result != null) && (result.size() > 0)){
 							for(SearchDoc doc:result){
-								//								System.out.println(doc.getTitle() + " : " + doc.getScore());
+
+								System.out.println(doc.getTitle() + " : " + doc.getScore());
 								Result res = new Result(doc);
 								content.add(res);
 							}
-							
-							
-							
-							
+
+
+
+
 							class EndHandler implements ClickHandler {
 								/**
 								 * Fired when the user clicks on the sendButton.
@@ -211,16 +211,18 @@ public class IRProject implements EntryPoint {
 									});
 								}
 							}
-							
+
 							RootPanel.get("endButtonContainer").add(endButton);
 							EndHandler handler = new EndHandler();
 							endButton.addClickHandler(handler);
-							
-							
-							
-							
-							
+
+
+
+
+
 						}
+						else
+							content.add(new HTML("Oups... No results found..."));
 
 						//								dialogBox.center();
 						//								closeButton.setFocus(true);
@@ -229,33 +231,33 @@ public class IRProject implements EntryPoint {
 				});
 			}
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		// Add a handler to send the name to the server
 		MyHandler handler = new MyHandler();

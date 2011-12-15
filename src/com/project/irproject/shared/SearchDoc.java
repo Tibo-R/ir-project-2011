@@ -16,6 +16,7 @@ public class SearchDoc implements IsSerializable, Comparable{
 	private String title;
 	private String type;
 	private String url;
+	private String content;
 //	private Object source;
 	private double score;
 	private double relative_score;
@@ -176,6 +177,14 @@ public class SearchDoc implements IsSerializable, Comparable{
 		this.publiDate=date;
 	}
 	
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
 
 
 

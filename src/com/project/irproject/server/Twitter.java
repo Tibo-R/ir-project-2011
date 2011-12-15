@@ -16,6 +16,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import twitter4j.Query;
@@ -72,7 +73,7 @@ public class Twitter implements Source{
 
 	public Map<String, Double> getMediaFrequency(String query, boolean expandAllUrls){
 
-		int totalRetrieved = 0;
+		double totalRetrieved = 0;
 		Map<String, Double> results = new HashMap<String, Double>(){
 			{
 				put("none", 0d);
@@ -116,17 +117,25 @@ public class Twitter implements Source{
 			}
 			else results.put("none", results.get("none") + 1);
 		}
+		
+		for(Entry<String, Double> entry : results.entrySet()){
+			results.put(entry.getKey(), entry.getValue()/totalRetrieved*100);
+		}
 		System.out.println(totalRetrieved);
 		return results;
 	}
 	
-	public ArrayList<String> getWordsForExpansion(String query){
-		ArrayList<String> words = new ArrayList<String>();
+	public TreeMap<Integer, String> getWordsForExpansion(String query, int nbOfWords){
+		TreeMap<Integer, String> words = new TreeMap<Integer, String>();
 		String corpus = getCorpus(query);
 		HashMap<String, Integer> occs = getOccurences(corpus);
-		if(occs.containsKey(query.toLowerCase()))
-			occs.remove(query.toLowerCase());
-
+		String[] queryWords = query.split(" ");
+		for(String word : queryWords){
+			if(occs.containsKey(word.toLowerCase()))
+				occs.remove(word.toLowerCase());
+		}
+//		if(occs.containsKey(query.toLowerCase()))
+//			occs.remove(query.toLowerCase());
 		SortedSet<Map.Entry<String, Integer>> list = entriesSortedByValues(occs);
 		int nbWords = list.size();
 		//		for(int i=0; i < 5; i++){
@@ -137,11 +146,10 @@ public class Twitter implements Source{
 		int i = 0;
 		for(Map.Entry<String, Integer> e : list){
 			i++;
-			if(i > nbWords - 5){
-				words.add(e.getKey());
+			if(i > (nbWords - nbOfWords)){
+				words.put(e.getValue(), e.getKey());
 				System.out.println(e.getKey() + " ("+ e.getValue() + ")");
 			}
-
 		}
 
 		//		Set keys = occs.keySet();
@@ -178,7 +186,7 @@ public class Twitter implements Source{
 		return corpus.toLowerCase();
 	}
 
-	private List<String> stopWords = Arrays.asList("'twas","a","able","about","across","after","ain't","all","almost","also","am","among","an","and","any","are","aren't","as","at","be","because","been","but","by","can","can't","cannot","could","could've","couldn't","dear","did","didn't","do","does","doesn't","don't","either","else","ever","every","for","from","get","got","had","has","hasn't","have","he","he'd","he'll","he's","her","hers","him","his","how","how'd","how'll","how's","however","i","i'd","i'll","i'm","i've","if","in","into","is","isn't","it","it's","its","just","least","let","like","likely","may","me","might","might've","mightn't","most","must","must've","mustn't","my","neither","no","nor","not","of","off","often","on","only","or","other","our","own","rather","said","say","says","shan't","she","she'd","she'll","she's","should","should've","shouldn't","since","so","some","than","that","that'll","that's","the","their","them","then","there","there's","these","they","they'd","they'll","they're","they've","this","tis","to","too","twas","us","wants","was","wasn't","we","we'd","we'll","we're","were","weren't","what","what'd","what's","when","when","when'd","when'll","when's","where","where'd","where'll","where's","which","while","who","who'd","who'll","who's","whom","why","why'd","why'll","why's","will","with","won't","would","would've","wouldn't","yet","you","you'd","you'll","you're","you've","your");
+	private List<String> stopWords = Arrays.asList("'twas","a","able","about","across","after","ain't","all","almost","also","am","among","an","and","any","are","aren't","as","at","be","because","been","but","by","can","can't","cannot","could","could've","couldn't","dear","did","didn't","do","does","doesn't","don't","either","else","ever","every","for","from","get","got","had","has","hasn't","have","he","he'd","he'll","he's","her","hers","him","his","how","how'd","how'll","how's","however","i","i'd","i'll","i'm","i've","if","in","into","is","isn't","it","it's","its","just","least","let","like","likely","may","me","might","might've","mightn't","most","must","must've","mustn't","my","neither","no","nor","not","of","off","often","on","only","or","other","our","own","rather","said","say","says","shan't","she","she'd","she'll","she's","should","should've","shouldn't","since","so","some","than","that","that'll","that's","the","their","them","then","there","there's","these","they","they'd","they'll","they're","they've","this","tis","to","too","twas","us","via","wants","was","wasn't","we","we'd","we'll","we're","were","weren't","what","what'd","what's","when","when","when'd","when'll","when's","where","where'd","where'll","where's","which","while","who","who'd","who'll","who's","whom","why","why'd","why'll","why's","will","with","won't","would","would've","wouldn't","yet","you","you'd","you'll","you're","you've","your");
 	private List<String> punctuation = Arrays.asList(",",".",":","?","!");
 	private final HashMap<String,Integer> getOccurences(String corpus){
 		//		System.out.println("AVANT : ");
@@ -196,7 +204,7 @@ public class Twitter implements Source{
 		StringTokenizer token = new StringTokenizer(corpus);
 		while (token.hasMoreTokens()){
 			String str = token.nextToken();
-			System.out.println(str);
+			//System.out.println(str);
 			if(str.length() > 2 && !stopWords.contains(str)){
 				if(tag.containsKey(str)){
 					Integer oldValue = tag.get(str);

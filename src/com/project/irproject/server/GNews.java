@@ -23,7 +23,7 @@ public class GNews implements Source{
 		List<SearchDoc> docs = new ArrayList<SearchDoc>();
 		try {
 			query = java.net.URLEncoder.encode(query, "ISO-8859-1");
-			feedUrl = new URL("http://news.google.com/news?q=" + query + "&output=rss&as_qdr=w");
+			feedUrl = new URL("http://news.google.com/news?q=" + query + "&output=rss&hl=en&as_qdr=w");
 			SyndFeedInput input = new SyndFeedInput();
 			SyndFeed feed = input.build(new XmlReader(feedUrl));
 			for (final Iterator<?> iter = feed.getEntries().iterator(); iter.hasNext();)

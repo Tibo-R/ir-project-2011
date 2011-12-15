@@ -1,7 +1,6 @@
 package com.project.irproject.server;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -32,7 +31,7 @@ GreetingService {
 		input = escapeHtml(input);
 		userAgent = escapeHtml(userAgent);
 		
-//		Twitter twitterSource = new Twitter();
+		Twitter twitterSource = new Twitter();
 //		ArrayList<String> wordsForExpansion = twitterSource.getWordsForExpansion(input);
 //		
 //		for(String s : wordsForExpansion){
@@ -49,6 +48,10 @@ GreetingService {
 		
 		Flick flSource = new Flick();
 		docsRetr.addAll(flSource.search(input));
+		
+		docsRetr = Ranking.updateWithTwitterWordsScore(twitterSource, docsRetr, input);
+		docsRetr = Ranking.updateWithTwitterMediaScore(twitterSource, docsRetr, input);
+		Ranking.setRelativeScore(docsRetr);
 		
 		docsRetr = Ranking.getTopResults(docsRetr, 20);
 		

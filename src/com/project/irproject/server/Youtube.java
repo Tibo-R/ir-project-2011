@@ -48,6 +48,7 @@ public class Youtube implements Source{
 		// search for puppies and include restricted content in the search results
 		youtubeQuery.setFullTextQuery(query);
 		youtubeQuery.setSafeSearch(YouTubeQuery.SafeSearch.NONE);
+		youtubeQuery.setLanguageRestrict("en");
 
 		YouTubeService service = new YouTubeService("irproject-0.1");
 		VideoFeed videoFeed;
@@ -78,14 +79,14 @@ public class Youtube implements Source{
 	private SearchDoc docFromVideoEntry(VideoEntry videoEntry) {
 		YouTubeMediaGroup mediaGroup = videoEntry.getMediaGroup();
 		SearchDoc doc = new SearchDoc(videoEntry.getTitle().getPlainText(), "youtube", mediaGroup.getVideoId());
+		doc.setSummary(mediaGroup.getDescription().getPlainTextContent());
 		YtStatistics stats = videoEntry.getStatistics();
 	
 		doc.setNumberView(stats.getViewCount());
 		//doc.setPubliDate(new Date(year, , date, hrs, min, sec));
 		Date df = new Date(mediaGroup.getUploaded().toStringRfc822());
 		doc.setPubliDate(df);
-		
-		
+	
 		return doc;
 	}
 

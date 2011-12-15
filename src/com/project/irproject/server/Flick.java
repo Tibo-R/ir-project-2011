@@ -64,10 +64,15 @@ public class Flick implements Source {
 		  
 		  for(int i = 0 ; i < matching_photos.size() ; i ++){
 			Photo photo=(Photo)matching_photos.get(i);
-			SearchDoc current = new SearchDoc(photo.getTitle(), "flickr", photo.getMediumUrl());
-			current.setNumberView(Long.valueOf(photo.getViews()));
-			current.setPubliDate(photo.getDatePosted());
-			docs.add(current);
+			SearchDoc doc = new SearchDoc(photo.getTitle(), "flickr", photo.getMediumUrl());
+			doc.setNumberView(Long.valueOf(photo.getViews()));
+			doc.setPubliDate(photo.getDatePosted());
+			String summary = photo.getDescription();
+			for(Object tag : photo.getTags()){
+				summary += " " + tag.toString();
+			}
+			doc.setSummary(summary);
+			docs.add(doc);
 		  }
 		  return Ranking.setResultScore(docs);
 		}
