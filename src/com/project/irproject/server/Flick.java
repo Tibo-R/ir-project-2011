@@ -5,24 +5,28 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Date;
+import java.util.Set;
 
-import javax.xml.parsers.ParserConfigurationException;
-
+import org.json.JSONException;
 import org.xml.sax.SAXException;
 
-import com.aetrion.flickr.Flickr;
-import com.aetrion.flickr.FlickrException;
-import com.aetrion.flickr.REST;
-import com.aetrion.flickr.RequestContext;
-import com.aetrion.flickr.photos.PhotoList;
-import com.aetrion.flickr.photos.PhotosInterface;
-import com.aetrion.flickr.photos.SearchParameters;
-import com.google.gdata.util.ServiceException;
+
+
+import com.gmail.yuyang226.flickr.Flickr;
+import com.gmail.yuyang226.flickr.FlickrException;
+import com.gmail.yuyang226.flickr.photos.Extras;
+import com.gmail.yuyang226.flickr.photos.Photo;
+import com.gmail.yuyang226.flickr.photos.PhotoList;
+import com.gmail.yuyang226.flickr.photos.PhotosInterface;
+import com.gmail.yuyang226.flickr.photos.SearchParameters;
 import com.project.irproject.shared.SearchDoc;
-import com.aetrion.flickr.photos.Photo;
+
+
+
 
 public class Flick implements Source {
 	
+	 
 	Flickr flickr;
 	PhotosInterface photosInterface;
  
@@ -30,7 +34,7 @@ public class Flick implements Source {
 		 
 		//flickr = new Flickr("4393b8a4b3cc1442db68779bb53c8be9","09ca0ae995443198",new REST());
 		flickr = new Flickr("4393b8a4b3cc1442db68779bb53c8be9");
-		Flickr.debugStream=false;
+		
 		photosInterface = flickr.getPhotosInterface();
 	}
 	
@@ -43,6 +47,7 @@ public class Flick implements Source {
 		Calendar calendar = Calendar.getInstance();
 		param.setMaxTakenDate(calendar.getTime());
 		param.setMaxUploadDate(calendar.getTime());
+		param.setExtras(Extras.ALL_EXTRAS);
 		
 		calendar.roll(Calendar.DAY_OF_YEAR, -7);
 		
@@ -55,10 +60,14 @@ public class Flick implements Source {
 		
 		try{
 		  matching_photos = photosInterface.search(param, 20, 1);
+	
 		  
 		  for(int i = 0 ; i < matching_photos.size() ; i ++){
 			Photo photo=(Photo)matching_photos.get(i);
-			docs.add(new SearchDoc(photo.getTitle(), "flickr", photo.getMediumUrl()) );
+			SearchDoc current = new SearchDoc(photo.getTitle(), "flickr", photo.getMediumUrl());
+			current.setNumberView(Long.valueOf(photo.getViews()));
+			current.setPubliDate(photo.getDatePosted());
+			docs.add(current);
 		  }
 		  return Ranking.setResultScore(docs);
 		}
@@ -68,7 +77,7 @@ public class Flick implements Source {
 	    }catch (FlickrException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}catch (SAXException e) {
+		}catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

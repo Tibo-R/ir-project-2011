@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gdata.client.youtube.YouTubeQuery;
@@ -21,6 +22,7 @@ import com.google.gdata.data.youtube.YouTubeMediaRating;
 import com.google.gdata.data.youtube.YtPublicationState;
 import com.google.gdata.data.youtube.YtStatistics;
 import com.google.gdata.util.ServiceException;
+import com.ibm.icu.text.DateFormat;
 import com.project.irproject.shared.SearchDoc;
 
 public class Youtube implements Source{
@@ -75,8 +77,15 @@ public class Youtube implements Source{
 
 	private SearchDoc docFromVideoEntry(VideoEntry videoEntry) {
 		YouTubeMediaGroup mediaGroup = videoEntry.getMediaGroup();
-		MediaPlayer mediaPlayer = mediaGroup.getPlayer();
 		SearchDoc doc = new SearchDoc(videoEntry.getTitle().getPlainText(), "youtube", mediaGroup.getVideoId());
+		YtStatistics stats = videoEntry.getStatistics();
+	
+		doc.setNumberView(stats.getViewCount());
+		//doc.setPubliDate(new Date(year, , date, hrs, min, sec));
+		Date df = new Date(mediaGroup.getUploaded().toStringRfc822());
+		doc.setPubliDate(df);
+		
+		
 		return doc;
 	}
 

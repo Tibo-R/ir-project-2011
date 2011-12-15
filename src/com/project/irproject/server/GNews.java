@@ -30,6 +30,9 @@ public class GNews implements Source{
 			{
 				final SyndEntry entry = (SyndEntry) iter.next();
 				SearchDoc doc = new SearchDoc(entry.getTitle(), "news", entry.getLink());
+				doc.setNumberView(null);
+				doc.setPubliDate(null);
+				
 				doc.setSummary(entry.getDescription().getValue());
 				docs.add(doc);
 			}

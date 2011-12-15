@@ -1,6 +1,7 @@
 package com.project.irproject.shared;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,8 +18,11 @@ public class SearchDoc implements IsSerializable, Comparable{
 	private String url;
 //	private Object source;
 	private double score;
+	private double relative_score;
 	private String summary;
 	private int relevant; //-1 = not relevant; 0 = don't know, 1 = relevant
+	private Long numberView;
+	private Date publiDate;
 	
 //	public static SearchDoc addDoc(String type, String url, Object post){
 //		if(!links.containsKey(url)){
@@ -98,6 +102,10 @@ public class SearchDoc implements IsSerializable, Comparable{
 	public void increaseScore(double score) {
 		this.score += score;
 	}
+	
+	public void increaseRelativeScore(double score){
+		this.relative_score += relative_score;
+	}
 
 
 	public String getTitle() {
@@ -151,6 +159,23 @@ public class SearchDoc implements IsSerializable, Comparable{
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	public long getNumberView(){
+		return numberView;
+	}
+	
+	public void setNumberView(Long number){
+		this.numberView = number;
+	}
+	
+	public Date getPubliDate(){
+		return publiDate;
+	}
+	
+	public void setPubliDate(Date date){
+		this.publiDate=date;
+	}
+	
 
 
 

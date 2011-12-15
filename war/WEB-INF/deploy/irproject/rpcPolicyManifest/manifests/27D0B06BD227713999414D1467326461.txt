@@ -1,0 +1,2 @@
+serviceClass: com.project.irproject.client.SendResultsService
+path: 2ED32D8E0467DCCB768721D566B1E55D.gwt.rpc
