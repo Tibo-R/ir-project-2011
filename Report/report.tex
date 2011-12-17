@@ -1,0 +1,117 @@
+\documentclass[10pt, a4paper]{article}
+\usepackage[scale=0.80]{geometry}
+
+% Options possibles : 10pt, 11pt, 12pt (taille de la fonte)
+%                     oneside, twoside (recto simple, recto-verso)
+%                     draft, final (stade de dÃ©veloppement)
+
+\usepackage[utf8]{inputenc}   % LaTeX, comprends les accents !
+\usepackage[T1]{fontenc}      % Police contenant les caractÃ¨res franÃ§ais
+\usepackage{geometry}         % DÃ©finir les marges
+\usepackage[english]{babel}  % Placez ici une liste de langues, la
+                              % derniÃ¨re Ã©tant la langue principale
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{caption}
+
+\pagestyle{headings}        % Pour mettre des entÃªtes avec les titres
+                              % des sections en haut de page
+\pagestyle{fancy}
+\fancyhf{}
+%\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+%\renewcommand{\sectionmark}[1]{\markright{#1}}
+%\chead{Thibault Roucou - \textbf{Assignment 5} - Information Retrieval}
+\fancyfoot[RE,RO]{\textbf{\thepage}}
+
+\title{Development of an Aggregated News Search Engine}           % Les paramÃ¨tres du titreÂ : titre, auteur, date
+\author{Rodrigo Doria Medina and Thibault Roucou \\ Master Human Media Interaction \\ University of Twente, Netherlands}
+% \date{}                     % La date n'est pas requise (la date du
+                              % jour de compilation est utilisÃ©e en son
+			      % absence
+			      
+		 
+\begin{document}
+
+
+\maketitle                  % Faire un titre utilisant les donnÃ©es
+                              % passÃ©es Ã  \title, \author et \date
+                              
+\begin{abstract}
+
+
+
+
+\end{abstract}	
+
+%-------------------------------------------%
+\section{Overview of the project}
+%-------------------------------------------%
+
+\subsection{Description}
+\paragraph{}The aim of the project is to create a search engine doing aggregative search by retrieving texts, images and videos using Twitter to build the ranking algorithm. Due to Twitter API restrictions, we decided to focus on news not older than 7 days. The results will be displayed as a NewsPaper.
+
+\subsection{Sources}
+
+\subsection{Technologies used}
+
+\subsection{Evaluation methods}
+
+
+
+%-------------------------------------------%
+\section{Building the baseline}
+%-------------------------------------------%
+
+\subsection{The APIs}
+
+\subsubsection{Twitter}
+
+
+\subsubsection{Google News}
+
+
+\subsubsection{YouTube}
+
+
+\subsubsection{Flickr}
+
+\subsection{Choosing the documents for the baseline}
+
+
+
+%-------------------------------------------%
+\section{The ranking algorithm}
+%-------------------------------------------%
+
+\subsection{Passive ranking}
+
+
+\subsection{Active ranking}
+
+\subsubsection{Using popular words from Twitter}
+because of the system use with twitter, we obtain words that are useless for the query. Like for example when the user search for "Obama", the results which contains "president" or "barrack" will have a good score. But it's not giving any information about the news related to "Obama". SO it's better if the user enter "president barrack obama" as a query, the results are significantly improve in this case.
+
+On the other hand, if the query is too precise, some providers like Youtube or Flickr will not return any results because they don't contain that much informations in their metadata.
+
+\subsubsection{Using Twitter to find the verticals}
+
+
+%-------------------------------------------%
+\section{The evaluation}
+%-------------------------------------------%
+
+
+
+%-------------------------------------------%
+\section{Conclusion}
+%-------------------------------------------%
+
+
+%\newpage
+%\bibliographystyle{plain}
+%\bibliography{biblio}
+
+
+\end{document}
+

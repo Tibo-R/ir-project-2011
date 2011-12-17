@@ -8,3 +8,7 @@ Requête "video" :
 
 urlExpansion :    {image=0.0, none=527.0, video=351.0}
 pas d'expansion : {image=1.0, none=743.0, video=280.0}
+
+because of the system use with twitter, we obtain words that are useless for the query. Like for example when the user search for "Obama", the results which contains "president" or "barrack" will have a good score. But it's not giving any information about the news related to Obama. SO it's better if the user enter "president barrack obama" as a query, the results are significantly improve in this case.
+
+On the other hand, if the query is too precise, some providers like youtube or flickr will not return any results because they don't contain that much informations in their metadata.
