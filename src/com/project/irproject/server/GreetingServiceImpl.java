@@ -1,6 +1,7 @@
 package com.project.irproject.server;
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -15,9 +16,8 @@ import com.project.irproject.shared.FieldVerifier;
 @SuppressWarnings("serial")
 public class GreetingServiceImpl extends RemoteServiceServlet implements
 GreetingService {
-	long startTime = System.currentTimeMillis();
 
-	public List<SearchDoc> greetServer(String input) throws IllegalArgumentException {
+	public HashMap<String, List<SearchDoc>> greetServer(String input) throws IllegalArgumentException {
 		// Verify that the input is valid. 
 		if (!FieldVerifier.isValidName(input)) {
 			// If the input is not valid, throw an IllegalArgumentException back to
@@ -40,6 +40,8 @@ GreetingService {
 //		input = escapeHtml(input);
 //		System.out.println("Query expanded : " + input);
 		
+		HashMap<String, List<SearchDoc>> result = new HashMap<String, List<SearchDoc>>();
+		
 		Youtube ytSource = new Youtube();
 		List<SearchDoc> docsRetr = ytSource.search(input);
 		
@@ -49,21 +51,15 @@ GreetingService {
 		Flick flSource = new Flick();
 		docsRetr.addAll(flSource.search(input));
 		
+		result.put("baseline", Ranking.getTopResults(docsRetr, 20));
+		
 		docsRetr = Ranking.updateWithTwitterWordsScore(twitterSource, docsRetr, input);
 		docsRetr = Ranking.updateWithTwitterMediaScore(twitterSource, docsRetr, input);
-		Ranking.setRelativeScore(docsRetr);
+		docsRetr = Ranking.setRelativeScore(docsRetr);
 		
-		docsRetr = Ranking.getTopResults(docsRetr, 20);
+		result.put("ranked", Ranking.getTopResults(docsRetr, 20));
 		
-	    long stopTime = System.currentTimeMillis();
-	    long elapsedTime = stopTime - startTime;
-	    System.out.println("Ended at : " + String.format("%d min, %d sec", 
-				TimeUnit.MILLISECONDS.toMinutes(elapsedTime),
-				TimeUnit.MILLISECONDS.toSeconds(elapsedTime) - 
-				TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(elapsedTime))
-				)
-				);
-		return docsRetr;
+		return result;
 	}
 
 	/**

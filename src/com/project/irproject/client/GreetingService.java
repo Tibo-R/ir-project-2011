@@ -1,6 +1,7 @@
 package com.project.irproject.client;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,5 +14,5 @@ import com.project.irproject.shared.SearchDoc;
  */
 @RemoteServiceRelativePath("greet")
 public interface GreetingService extends RemoteService {
-	List<SearchDoc> greetServer(String search) throws IllegalArgumentException;
+	HashMap<String, List<SearchDoc>> greetServer(String search) throws IllegalArgumentException;
 }

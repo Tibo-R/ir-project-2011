@@ -1,5 +1,6 @@
 package com.project.irproject.client;
 
+import java.util.HashMap;
 import java.util.List;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -58,6 +59,7 @@ public class IRProject implements EntryPoint {
 
 
 		final Button endButton = new Button("Send Results");
+		final Button nextButton = new Button("Next");
 
 		// We can add style names to widgets
 
@@ -145,7 +147,7 @@ public class IRProject implements EntryPoint {
 				textToServerLabel.setText(textToServer);
 				serverResponseLabel.setText("");
 				greetingService.greetServer(textToServer,
-						new AsyncCallback<List<SearchDoc>>() {
+						new AsyncCallback<HashMap<String, List<SearchDoc>>>() {
 					public void onFailure(Throwable caught) {
 						// Show the RPC error message to the user
 						dialogBox
@@ -156,67 +158,83 @@ public class IRProject implements EntryPoint {
 						dialogBox.center();
 						closeButton.setFocus(true);
 					}
-					public void onSuccess(final List<SearchDoc> result) {
+					public void onSuccess(final HashMap<String, List<SearchDoc>> result) {
 						content.clear();
 						dialogBox.setText("Remote Procedure Call");
 						serverResponseLabel.removeStyleName("serverResponseLabelError");
 
-						if((result != null) && (result.size() > 0)){
-							for(SearchDoc doc:result){
+						if((result.get("baseline") != null) && (result.get("baseline").size() > 0)){
+							for(SearchDoc doc:result.get("baseline")){
 
 								System.out.println(doc.getTitle() + " : " + doc.getScore());
 								Result res = new Result(doc);
 								content.add(res);
 							}
 
-
-
-
-							class EndHandler implements ClickHandler {
-								/**
-								 * Fired when the user clicks on the sendButton.
-								 */
+							class NextHandler implements ClickHandler {
 								public void onClick(ClickEvent event) {
-									sendClickToServer();
-								}
+									nextButton.setVisible(false);
+									nextButton.setEnabled(false);
+									content.clear();
+									if((result.get("ranked") != null) && (result.get("ranked").size() > 0)){
+										for(SearchDoc doc:result.get("ranked")){
 
-
-								/**
-								 * Send the name from the nameField to the server and wait for a response.
-								 */
-								private void sendClickToServer() {
-
-									// Then, we send the input to the server.
-									endButton.setEnabled(false);
-									sendResultsService.sendResults(textToServer, result, 
-											new AsyncCallback<Boolean>() {
-										public void onFailure(Throwable caught) {
-											// Show the RPC error message to the user
-											dialogBox
-											.setText("Remote Procedure Call - Failure");
-											serverResponseLabel
-											.addStyleName("serverResponseLabelError");
-											serverResponseLabel.setHTML(SERVER_ERROR);
-											dialogBox.center();
-											closeButton.setFocus(true);
-										}
-										public void onSuccess(Boolean result) {
-											// Show the RPC error message to the user
-											dialogBox
-											.setText("Email sent !!!");
-											dialogBox.center();
-											closeButton.setFocus(true);
+											System.out.println(doc.getTitle() + " : " + doc.getScore());
+											Result res = new Result(doc);
+											content.add(res);
 										}
 
-									});
+										class EndHandler implements ClickHandler {
+											/**
+											 * Fired when the user clicks on the sendButton.
+											 */
+											public void onClick(ClickEvent event) {
+												sendClickToServer();
+											}
+
+
+											/**
+											 * Send the name from the nameField to the server and wait for a response.
+											 */
+											private void sendClickToServer() {
+
+												// Then, we send the input to the server.
+												endButton.setEnabled(false);
+												sendResultsService.sendResults(textToServer, result, 
+														new AsyncCallback<Boolean>() {
+													public void onFailure(Throwable caught) {
+														// Show the RPC error message to the user
+														dialogBox
+														.setText("Remote Procedure Call - Failure");
+														serverResponseLabel
+														.addStyleName("serverResponseLabelError");
+														serverResponseLabel.setHTML(SERVER_ERROR);
+														dialogBox.center();
+														closeButton.setFocus(true);
+													}
+													public void onSuccess(Boolean result) {
+														// Show the RPC error message to the user
+														dialogBox
+														.setText("Email sent !!!");
+														dialogBox.center();
+														closeButton.setFocus(true);
+													}
+
+												});
+											}
+										}
+
+										RootPanel.get("endButtonContainer").add(endButton);
+										EndHandler handler = new EndHandler();
+										endButton.addClickHandler(handler);
+									}
 								}
+
 							}
 
-							RootPanel.get("endButtonContainer").add(endButton);
-							EndHandler handler = new EndHandler();
-							endButton.addClickHandler(handler);
-
-
+							RootPanel.get("endButtonContainer").add(nextButton);
+							NextHandler handler = new NextHandler();
+							nextButton.addClickHandler(handler);
 
 
 

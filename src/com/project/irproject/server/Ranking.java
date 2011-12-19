@@ -27,7 +27,7 @@ public class Ranking {
 	}
 	
 	
-	public static void setRelativeScore(List<SearchDoc> docs) {
+	public static List<SearchDoc> setRelativeScore(List<SearchDoc> docs) {
 		
 		
 		for(SearchDoc doc : docs){
@@ -40,6 +40,7 @@ public class Ranking {
 			}
 			
 		}
+		return docs;
 		
 	}
 
