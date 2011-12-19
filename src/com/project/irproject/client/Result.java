@@ -31,7 +31,7 @@ public class Result extends Composite {
 		if(doc.getType().equals("youtube")){
 			AbstractMediaPlayer player = null;
 			try {
-				// create the player, specifing URL of media
+				// create the player, specifying URL of media
 				player = new YouTubePlayer("http://www.youtube.com/v/" + doc.getUrl(), "560px", "315px");
 				widget.add(player); // add player to panel.
 			} catch(PluginVersionException e) {
@@ -71,6 +71,8 @@ public class Result extends Composite {
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
 				if(event.getValue() == true){
 					document.setRelevant(1);
+					addStyleName("relevant");
+					removeStyleName("notRelevant");
 				}
 
 			}
@@ -81,6 +83,8 @@ public class Result extends Composite {
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
 				if(event.getValue() == true){
 					document.setRelevant(-1);
+					addStyleName("notRelevant");
+					removeStyleName("relevant");
 				}
 
 			}
@@ -91,15 +95,21 @@ public class Result extends Composite {
 			public void onValueChange(ValueChangeEvent<Boolean> event) {
 				if(event.getValue() == true){
 					document.setRelevant(0);
+					removeStyleName("notRelevant");
+					removeStyleName("relevant");
 				}
 
 			}
 		});
 
 		switch(document.getRelevant()){
-		case 1 : relevant.setChecked(true);
+		case 1 : 
+			relevant.setChecked(true);
+			addStyleName("relevant");
 		break;
-		case -1 : notRelevant.setChecked(true);
+		case -1 : 
+			notRelevant.setChecked(true);
+			addStyleName("notRelevant");
 		break;
 		default : dontKnow.setChecked(true);
 		}

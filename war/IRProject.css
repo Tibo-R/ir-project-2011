@@ -43,3 +43,11 @@ h1 {
 .hover{
 	background-color: #FFFDED;
 }
+
+.relevant, .relevant.hover{
+	background-color: #C5FFCE;
+}
+
+.notRelevant, .notRelevant.hover{
+	background-color: #FFC5C5;
+}
