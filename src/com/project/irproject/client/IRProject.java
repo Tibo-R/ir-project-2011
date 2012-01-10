@@ -13,6 +13,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -55,6 +56,10 @@ public class IRProject implements EntryPoint {
 		final TextBox nameField = new TextBox();
 		nameField.setText("Your search");
 		final Label errorLabel = new Label();
+		
+		final Image loaderImg = new Image("ajax-loader.gif");
+		final RootPanel loader;
+		
 
 
 
@@ -72,6 +77,10 @@ public class IRProject implements EntryPoint {
 		RootPanel.get("sendButtonContainer").add(sendButton);
 		sendButton.setSize("105px", "33px");
 		RootPanel.get("errorLabelContainer").add(errorLabel);
+		loader = RootPanel.get("loaderContainer");
+		loader.setVisible(false);
+		loader.add(loaderImg);
+		loader.add(new Label("Sorry, the search takes a while..."));
 
 
 		// Focus the cursor on the name field when the app loads
@@ -135,6 +144,7 @@ public class IRProject implements EntryPoint {
 			 * Send the name from the nameField to the server and wait for a response.
 			 */
 			private void sendNameToServer() {
+				loader.setVisible(true);
 				// First, we validate the input.
 				errorLabel.setText("");
 				final String textToServer = nameField.getText();
@@ -168,6 +178,7 @@ public class IRProject implements EntryPoint {
 
 								System.out.println(doc.getTitle() + " : " + doc.getScore());
 								Result res = new Result(doc);
+								loader.setVisible(false);
 								content.add(res);
 							}
 
@@ -176,11 +187,13 @@ public class IRProject implements EntryPoint {
 									nextButton.setVisible(false);
 									nextButton.setEnabled(false);
 									content.clear();
+									loader.setVisible(true);
 									if((result.get("ranked") != null) && (result.get("ranked").size() > 0)){
 										for(SearchDoc doc:result.get("ranked")){
 
 											System.out.println(doc.getTitle() + " : " + doc.getScore());
 											Result res = new Result(doc);
+											loader.setVisible(false);
 											content.add(res);
 										}
 
@@ -197,7 +210,6 @@ public class IRProject implements EntryPoint {
 											 * Send the name from the nameField to the server and wait for a response.
 											 */
 											private void sendClickToServer() {
-
 												// Then, we send the input to the server.
 												endButton.setEnabled(false);
 												sendResultsService.sendResults(textToServer, result, 

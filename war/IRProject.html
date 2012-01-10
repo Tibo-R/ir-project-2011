@@ -45,11 +45,28 @@
     </noscript>
 
     <h1>Get me some News !</h1>
+    
+    <div id="welcome">
+    	<p>This website is aimed to provide news about any topic you want. We are currently testing our system and we need your feedbacks.
+    	</p>
+    	<p>In order to help us, follow the few steps below :</p>
+		<ul>
+			<li>Step 1 : Search for something</li>
+			<li>Step 2 : Get the first set of results (default set), and give your feedback about each document.</li>
+			<li>Step 3 : Click on "Next" and proceed the same way with the new customized set of results.</li>
+			<li>Step 4 : Click on "Send Results"</li>
+		</ul>
+
+		<p class="note">Note 1 : In order to rate each document, you have 3 different choices: Relevant, Not relevant, don't know. This choices show up when the mouse is over any document.</p>
+
+		<p class="note">Note 2 : Please note that the accuracy of the results gets higher if you choose a trending topic.</p>
+
+		<p>Please repeat the procedure as much as you want with different topics.</p>
+
+<p>Have fun !!</p>
+    </div>
 
     <table align="center">
-      <tr>
-        <td colspan="2" style="font-weight:bold;">About what ? :</td>        
-      </tr>
       <tr>
         <td id="nameFieldContainer"></td>
         <td id="sendButtonContainer"></td>
@@ -60,6 +77,8 @@
     </table>
     
     <div align="center" id="contentContainer"></div>
+    
+    <div align="center" id="loaderContainer"></div>
     
     <div align="center" id="endButtonContainer"></div>
   </body>

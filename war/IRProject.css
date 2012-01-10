@@ -51,3 +51,8 @@ h1 {
 .notRelevant, .notRelevant.hover{
 	background-color: #FFC5C5;
 }
+
+#welcome{
+	margin: auto;
+	width: 700px;
+}
