@@ -9,6 +9,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -60,8 +61,10 @@ public class IRProject implements EntryPoint {
 		final Image loaderImg = new Image("ajax-loader.gif");
 		final RootPanel loader;
 		
-
-
+		Image logoUT = new Image("UT_Logo_Black_EN.png");
+		logoUT.setWidth("200px");
+		final RootPanel creditsPanel;
+		
 
 		final Button endButton = new Button("Send Results");
 		final Button nextButton = new Button("Next");
@@ -81,7 +84,12 @@ public class IRProject implements EntryPoint {
 		loader.setVisible(false);
 		loader.add(loaderImg);
 		loader.add(new Label("Sorry, the search takes a while..."));
-
+		
+		creditsPanel = RootPanel.get("creditsContainer");
+		creditsPanel.add(new Label("A University of Twente Project by Rodrigo Doria Medina and Thibault Roucou"));
+		creditsPanel.add(logoUT);
+		
+		RootPanel.get("footer").setVisible(false);
 
 		// Focus the cursor on the name field when the app loads
 		nameField.setFocus(true);
@@ -144,12 +152,17 @@ public class IRProject implements EntryPoint {
 			 * Send the name from the nameField to the server and wait for a response.
 			 */
 			private void sendNameToServer() {
+				RootPanel.get("footer").setVisible(false);
+				content.clear();
+				RootPanel.get("npTitle").clear();
 				loader.setVisible(true);
+				endButton.setVisible(false);
+				endButton.setEnabled(false);
 				// First, we validate the input.
 				errorLabel.setText("");
 				final String textToServer = nameField.getText();
 				if (!FieldVerifier.isValidName(textToServer)) {
-					errorLabel.setText("Please enter at least four characters");
+					errorLabel.setText("Please enter at least 2 characters");
 					return;
 				}
 
@@ -172,84 +185,25 @@ public class IRProject implements EntryPoint {
 						content.clear();
 						dialogBox.setText("Remote Procedure Call");
 						serverResponseLabel.removeStyleName("serverResponseLabelError");
-
-						if((result.get("baseline") != null) && (result.get("baseline").size() > 0)){
-							for(SearchDoc doc:result.get("baseline")){
-
-								System.out.println(doc.getTitle() + " : " + doc.getScore());
-								Result res = new Result(doc);
-								loader.setVisible(false);
+						loader.setVisible(false);
+						if((result.get("ranked") != null) && (result.get("ranked").size() > 0)){
+							RootPanel.get("footer").setVisible(true);
+							RootPanel.get("npTitle").clear();
+							RootPanel.get("npTitle").add(new HTML(textToServer));;
+							
+							int i = 0;
+							for(SearchDoc doc:result.get("ranked")){
+								i++;
+//								System.out.println(doc.getTitle() + " : " + doc.getScore());
+								Result res = new Result(doc, i);
+								DOM.setElementAttribute(res.getElement(), "id", "doc-" + i);
 								content.add(res);
+								if(i==1 || i==3 || i==6 || i==10 || i==14)
+									content.add(new HTML("<div class=\"clear\"></div>"));
+								if(i==3 || i==14)
+									content.add(new HTML("<hr size=\"2\" width=\"90%\" noshade align=\"center\">"));
+								
 							}
-
-							class NextHandler implements ClickHandler {
-								public void onClick(ClickEvent event) {
-									nextButton.setVisible(false);
-									nextButton.setEnabled(false);
-									content.clear();
-									loader.setVisible(true);
-									if((result.get("ranked") != null) && (result.get("ranked").size() > 0)){
-										for(SearchDoc doc:result.get("ranked")){
-
-											System.out.println(doc.getTitle() + " : " + doc.getScore());
-											Result res = new Result(doc);
-											loader.setVisible(false);
-											content.add(res);
-										}
-
-										class EndHandler implements ClickHandler {
-											/**
-											 * Fired when the user clicks on the sendButton.
-											 */
-											public void onClick(ClickEvent event) {
-												sendClickToServer();
-											}
-
-
-											/**
-											 * Send the name from the nameField to the server and wait for a response.
-											 */
-											private void sendClickToServer() {
-												// Then, we send the input to the server.
-												endButton.setEnabled(false);
-												sendResultsService.sendResults(textToServer, result, 
-														new AsyncCallback<Boolean>() {
-													public void onFailure(Throwable caught) {
-														// Show the RPC error message to the user
-														dialogBox
-														.setText("Remote Procedure Call - Failure");
-														serverResponseLabel
-														.addStyleName("serverResponseLabelError");
-														serverResponseLabel.setHTML(SERVER_ERROR);
-														dialogBox.center();
-														closeButton.setFocus(true);
-													}
-													public void onSuccess(Boolean result) {
-														// Show the RPC error message to the user
-														dialogBox
-														.setText("Email sent !!!");
-														dialogBox.center();
-														closeButton.setFocus(true);
-													}
-
-												});
-											}
-										}
-
-										RootPanel.get("endButtonContainer").add(endButton);
-										EndHandler handler = new EndHandler();
-										endButton.addClickHandler(handler);
-									}
-								}
-
-							}
-
-							RootPanel.get("endButtonContainer").add(nextButton);
-							NextHandler handler = new NextHandler();
-							nextButton.addClickHandler(handler);
-
-
-
 						}
 						else
 							content.add(new HTML("Oups... No results found..."));

@@ -12,6 +12,8 @@
     <!-- Consider inlining CSS to reduce the number of requested files -->
     <!--                                                               -->
     <link type="text/css" rel="stylesheet" href="IRProject.css">
+    <link href='http://fonts.googleapis.com/css?family=Abril+Fatface' rel='stylesheet' type='text/css'>
+    <script type="text/javascript" language="javascript" src="http://gwtlightbox.googlecode.com/svn/trunk/war/gwtlightbox/gwtlightbox.nocache.js"></script>
 
     <!--                                           -->
     <!-- Any title is fine                         -->
@@ -46,7 +48,7 @@
 
     <h1>Get me some News !</h1>
     
-    <div id="welcome">
+   <!-- <div id="welcome">
     	<p>This website is aimed to provide news about any topic you want. We are currently testing our system and we need your feedbacks.
     	</p>
     	<p>In order to help us, follow the few steps below :</p>
@@ -57,29 +59,36 @@
 			<li>Step 4 : Click on "Send Results"</li>
 		</ul>
 
-		<p class="note">Note 1 : In order to rate each document, you have 3 different choices: Relevant, Not relevant, don't know. This choices show up when the mouse is over any document.</p>
+		<p class="note">Note 1 : In order to rate each document, you have 3 different choices: Relevant, Not relevant, don't know. This choices show up when the mouse is over a document.</p>
 
 		<p class="note">Note 2 : Please note that the accuracy of the results gets higher if you choose a trending topic.</p>
 
 		<p>Please repeat the procedure as much as you want with different topics.</p>
 
 <p>Have fun !!</p>
-    </div>
+    </div>-->
+    
 
-    <table align="center">
-      <tr>
-        <td id="nameFieldContainer"></td>
-        <td id="sendButtonContainer"></td>
-      </tr>
-      <tr>
-        <td colspan="2" style="color:red;" id="errorLabelContainer"></td>
-      </tr>
-    </table>
-    
-    <div align="center" id="contentContainer"></div>
-    
+	<div id="searchbox">
+        <span id="nameFieldContainer"></span>
+        <span id="sendButtonContainer"></span>
+        <div colspan="2" style="color:red;" id="errorLabelContainer"></div>
+    </div>
+    <div class="clear"></div>
     <div align="center" id="loaderContainer"></div>
     
+    <div id="newspaper">
+    
+    <h1 id="npTitle"></h1>
+    <div id="infoBan"></div>
+    
+    <div align="center" id="contentContainer"></div>
+    <div class="clear"></div>
+    
     <div align="center" id="endButtonContainer"></div>
+    <div style="display: none;" id="footer"></div>
+    </div>
+    <div class="clear"></div>
+    <div align="center" id="creditsContainer"></div>
   </body>
 </html>

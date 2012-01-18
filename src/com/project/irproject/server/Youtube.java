@@ -81,8 +81,9 @@ public class Youtube implements Source{
 		SearchDoc doc = new SearchDoc(videoEntry.getTitle().getPlainText(), "youtube", mediaGroup.getVideoId());
 		doc.setSummary(mediaGroup.getDescription().getPlainTextContent());
 		YtStatistics stats = videoEntry.getStatistics();
-	
-		doc.setNumberView(stats.getViewCount());
+		if(stats != null)
+			doc.setNumberView(stats.getViewCount());
+		else doc.setNumberView(0l);
 		//doc.setPubliDate(new Date(year, , date, hrs, min, sec));
 		Date df = new Date(mediaGroup.getUploaded().toStringRfc822());
 		doc.setPubliDate(df);
@@ -91,10 +92,10 @@ public class Youtube implements Source{
 	}
 
 	public static void printVideoEntry(VideoEntry videoEntry, boolean detailed) {
-		System.out.println("Title: " + videoEntry.getTitle().getPlainText());
+//		System.out.println("Title: " + videoEntry.getTitle().getPlainText());
 
 		if(videoEntry.isDraft()) {
-			System.out.println("Video is not live");
+//			System.out.println("Video is not live");
 			YtPublicationState pubState = videoEntry.getPublicationState();
 			if(pubState.getState() == YtPublicationState.State.PROCESSING) {
 				System.out.println("Video is still being processed.");

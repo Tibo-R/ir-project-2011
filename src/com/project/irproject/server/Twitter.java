@@ -82,7 +82,7 @@ public class Twitter implements Source{
 			};
 		};
 		List<Tweet> tweets = getResults(query);
-		totalRetrieved = tweets.size();
+//		totalRetrieved = tweets.size();
 		for (Tweet tweet : tweets) {
 			if(tweet.getMediaEntities() != null){
 				results.put("image", results.get("image") + 1);
@@ -103,11 +103,11 @@ public class Twitter implements Source{
 						}
 						
 						if(url != null){
-							System.out.println(url);
+//							System.out.println(url);
 							
-							if(url.contains("youtu") || url.contains("daily") || url.contains("video"))
+							if(url.contains("youtu") || url.contains("video") || url.contains("vimeo"))
 								results.put("video", results.get("video") + 1);
-							else if(url.contains("img") || url.contains("pic") || url.contains("flickr") || url.contains("photo"))
+							else if(url.contains("img") || url.contains("pic") || url.contains("flic") || url.contains("photo") || url.contains("instagr") || url.contains("yfrog"))
 								results.put("image", results.get("image") + 1);
 							else results.put("none", results.get("none") + 1);
 						}
@@ -117,11 +117,11 @@ public class Twitter implements Source{
 			}
 			else results.put("none", results.get("none") + 1);
 		}
-		
+		results.put("none", results.get("none")/5);
+		totalRetrieved = results.get("image") + results.get("video") + results.get("none");
 		for(Entry<String, Double> entry : results.entrySet()){
 			results.put(entry.getKey(), entry.getValue()/totalRetrieved*100);
 		}
-		System.out.println(totalRetrieved);
 		return results;
 	}
 	
@@ -148,7 +148,7 @@ public class Twitter implements Source{
 			i++;
 			if(i > (nbWords - nbOfWords)){
 				words.put(e.getValue(), e.getKey());
-				System.out.println(e.getKey() + " ("+ e.getValue() + ")");
+//				System.out.println(e.getKey() + " ("+ e.getValue() + ")");
 			}
 		}
 

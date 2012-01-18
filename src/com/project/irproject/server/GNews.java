@@ -31,9 +31,19 @@ public class GNews implements Source{
 				final SyndEntry entry = (SyndEntry) iter.next();
 				SearchDoc doc = new SearchDoc(entry.getTitle(), "news", entry.getLink());
 				doc.setNumberView(null);
-				doc.setPubliDate(null);
+				doc.setPubliDate(entry.getPublishedDate());
 				
-				doc.setSummary(entry.getDescription().getValue());
+				String summary = entry.getDescription().getValue();
+				
+				String[] tmp = summary.split("</td>");
+				summary = tmp[1];
+				tmp = summary.split("<div class=\"lh\">");
+				summary = tmp[1];
+				tmp = summary.split("</div>");
+				summary = tmp[0];
+				summary = summary.replaceAll("<a(.+?)</a>", "");
+				summary = summary.replaceAll("<nobr(.+?)</nobr>", "");
+				doc.setSummary(summary);
 				docs.add(doc);
 			}
 

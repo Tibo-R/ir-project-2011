@@ -63,13 +63,13 @@ public class Ranking {
 	public static List<SearchDoc> updateWithTwitterWordsScore(Twitter twitterSource, List<SearchDoc> docs, String query) {
 		TreeMap<Integer, String> bestWords = twitterSource.getWordsForExpansion(query, 10);
 		Map<String, Integer> wordsWithScore = new HashMap<String, Integer>();
-		System.out.println(bestWords);
+//		System.out.println(bestWords);
 		int nbTotalWords = 0;
 		
 		for (Integer key : bestWords.keySet()) {
 			nbTotalWords += key;
 		}
-		System.out.println("TotalNb = " + nbTotalWords);
+//		System.out.println("TotalNb = " + nbTotalWords);
 		for (Entry<Integer, String> entry : bestWords.entrySet()) {
 			double score = (double)entry.getKey()/(double)nbTotalWords*100f;
 			wordsWithScore.put(entry.getValue(), (int) Math.round(score));

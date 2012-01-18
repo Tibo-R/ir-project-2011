@@ -65,11 +65,24 @@
 
 \subsection{The APIs}
 
-\subsubsection{Twitter}
-
-
 \subsubsection{Google News}
+\paragraph{}Google News doesn't provide an API anymore. Therefore, we had to find another way to get the results from it. We decided to use the RSS feed and the search system. In order to get information from this RSS feed, we used an API called Rome, which allow to use easily RSS feeds.
 
+\paragraph{}A Google News query is of the following form :
+
+\begin{quote}
+"http://news.google.com/news?q=\textit{user\_query}\&output=rss\&hl=en\&as\_qdr=w"
+\end{quote}
+
+\paragraph{Explanation of the different parameters : }
+\begin{itemize}
+	\item q : the query provided by the user
+	\item output : the output format given by GoogleNews, here we choose rss.
+	\item hl : the language of the provided results. We decided to retrieve in priority english results.
+	\item as\_qdr : this parameter allow to decide how old can the results be. Here "w" means week so we only retrieve results on week old at worst.
+\end{itemize}
+
+\paragrapg{}From this query, we get a lot of results and for each result, we extract the title, a summary and a link.
 
 \subsubsection{YouTube}
 
@@ -84,28 +97,67 @@
 \section{The ranking algorithm}
 %-------------------------------------------%
 
+
 \subsection{Passive ranking}
 
 
 \subsection{Active ranking}
 
-\subsubsection{Using popular words from Twitter}
-because of the system use with twitter, we obtain words that are useless for the query. Like for example when the user search for "Obama", the results which contains "president" or "barrack" will have a good score. But it's not giving any information about the news related to "Obama". SO it's better if the user enter "president barrack obama" as a query, the results are significantly improve in this case.
+\subsubsection{The Twitter API}
+\paragraph{}Our active ranking uses twitter to rank documents. We therefore need to retrieve informations from Twitter using the API provided. We use an implementation of this API in Java called Twitter4J which is really easy to use.
 
-On the other hand, if the query is too precise, some providers like Youtube or Flickr will not return any results because they don't contain that much informations in their metadata.
+\paragraph{}We use only the search API which allow to retrieve tweets that are less than 7days old. In order to have a useful sample of tweets, we retrieve 1000 tweets for each query and do some computation on this sample to extract some useful information for the ranking algorithm.
 
-\subsubsection{Using Twitter to find the verticals}
+\subsubsection{Using Twitter to judge the "interestingness" of documents}
+\paragraph{}In order to define which are the most interesting documents, we use Twitter to define the most "trending" words for the user's query and find these words in the document to increase their ranking score.
+
+\paragraph{Getting "interesting" words from Twitter}
+\paragraph{}We first retrieve a large amount of tweets (1000 in our case) using the search API with the user's query. The second step in then to concat all the tweets retrieved, to remove the words which are in the query, the stopwords, the punctuation and the links. With the "cleaned" corpus, we can count the occurences of each words to determine the top 10 words.
+
+\paragraph{Ranking system}
+\paragraph{}We then give a score to each of the ten words according to their number of occurrences on a scale of 100 :
+
+\[ \textrm{Score for a word} = \frac{\textrm{Occurrences of the word}}{\textrm{Total number of occurrences of the 10 first words}} \times 100 \]
+
+When all the scores are defined, we look in each document if one of these 10 words are present in the description or in the title. For each word found in the description of a document, we will add to it the corresponding score and if it is in the title, we will add two times this score. We thought that if one of these words was in the title, it was probably a very important document for the query and therefore deserve a high score.
+
+
+
+\subsubsection{Using Twitter to define the most relevant vertical}
+\paragraph{}One big problem in aggregative search is to define the percentage of each verticals for a query. Indeed, how can we know if a user wants more videos, more images or more text. The user maybe doesn't even know what she wants at the beginning but will see in the results if one vertical is better than an other for her query. To try to solve this problem, we have again used Twitter. Indeed, according to Twitter \footnote{http://techcrunch.com/2010/09/14/twitter-seeing-90-million-tweets-per-day/}, in 2010, 25\% of tweets were containing links and with most of the query we have tried, it was far more. So we have decided to use these links and analyze them to know if they link to an image, a video or something unknown.
+
+\paragraph{Getting the verticals percentage}
+\paragraph{}We again retrieve 1000 tweets from the user's query and analyzed the different links leading to a video and define that these links contains these following words : "youtu", "video" or "vimeo". If a link contain these part of words, we then count them as videos. We did the same for images with the following list of words : "img", "pic", "flic", "photo", "instagr", "yfrog". All the remaining links are considered as "unknown". As a lot of links in twitter are shortened, it is impossible to know if they lead to a video or an image in a reasonable time. We therefore decided, after some test, that we could divide the number of unknown link by 5 and imagine they lead to text.
+
+\paragraph{Ranking system}
+\paragraph{}We can then set a score for each vertical : 
+
+\[ \textrm{Score for a vertical} = \frac{\textrm{Occurrences of the vertical}}{\textrm{Occurence of images} + \textrm{Occurence of videos} + (\textrm{Total unknown links})/ 5} \times 100 \]
+
+\paragraph{}When all the scores are defined, we had to each videos and images their vertical score. We didn't add anything to the text documents because they are already advantaged by the "interestingness" ranking because they contain more words than for videos or images. This ranking we therefore give a better balance to the results.
 
 
 %-------------------------------------------%
 \section{The evaluation}
 %-------------------------------------------%
+\paragraph{}In order to evaluate the system, we have decided to compare it to a baseline. Like said before, the baseline is a round robin ranking based on the ranking provided by the different APIs.
 
-
+\paragraph{}To determine if a document is relevant or not, we need the users to say it. Thats why we published a test version of our system online. This version was providing 2 sets of results for a query. The first set was the baseline and the second was our ranked results. The user had the possibility to say for each result if it was relevant or not. The results were then sent to us by email and we were able to compare the different precision (P@5, P@10 and P@20)
 
 %-------------------------------------------%
-\section{Conclusion}
+\section{Discussion and Conclusions}
 %-------------------------------------------%
+
+\subsection{Discussions about the system}
+\setcounter{secnumdepth}{4}
+\paragraph{}During the use of Twitter in the algorithm, when finding interesting words, we find in first "obvious" words that complete the query. For example when the user search for "Obama", the first two words being returns will be "president" and "barrack" so results with these words will have a higher score. But it's not giving any information about the news related to "Obama". So it's better if the user enter "president barrack obama" as a query, the results are improved in this case.
+
+\subsection{Difficulties encountered}
+\setcounter{secnumdepth}{5}
+\paragraph{}Lack of possibilities for Google News
+\paragraph{}Lack of information in a Flickr image
+\paragraph{}Many of the link in twitter are shortened
+\paragraph{}The system is slow
 
 
 %\newpage

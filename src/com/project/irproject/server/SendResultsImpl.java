@@ -39,7 +39,7 @@ public class SendResultsImpl extends RemoteServiceServlet implements SendResults
 		
 		msgBody += getDisplayedResults(docs.get("ranked"));
 
-		System.out.println(msgBody);
+//		System.out.println(msgBody);
 		try {
 			Message msg = new MimeMessage(session);
 			msg.setFrom(new InternetAddress("thibault.roucou@gmail.com", "IRPROJECT"));
