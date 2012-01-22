@@ -51,11 +51,8 @@ GreetingService {
 		Flick flSource = new Flick();
 		docsRetr.addAll(flSource.search(input));
 		
-		result.put("baseline", Ranking.getTopResults(docsRetr, 20));
-		
 		docsRetr = Ranking.updateWithTwitterWordsScore(twitterSource, docsRetr, input);
 		docsRetr = Ranking.updateWithTwitterMediaScore(twitterSource, docsRetr, input);
-		docsRetr = Ranking.setRelativeScore(docsRetr);
 		
 		result.put("ranked", Ranking.getTopResults(docsRetr, 20));
 		

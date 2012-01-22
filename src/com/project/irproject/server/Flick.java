@@ -59,7 +59,7 @@ public class Flick implements Source {
 		PhotoList matching_photos = null;
 		
 		try{
-		  matching_photos = photosInterface.search(param, 20, 1);
+		  matching_photos = photosInterface.search(param, 50, 1);
 	
 		  
 		  for(int i = 0 ; i < matching_photos.size() ; i ++){
@@ -74,6 +74,8 @@ public class Flick implements Source {
 			doc.setSummary(summary);
 			docs.add(doc);
 		  }
+		  docs = Ranking.setRelativeScore(docs);
+		  docs = Ranking.getTopResults(docs, 50);
 		  return Ranking.setResultScore(docs);
 		}
 	    catch (IOException e) {

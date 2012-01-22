@@ -35,12 +35,12 @@ public class Youtube implements Source{
 			// order results by the number of views (most viewed first)
 			youtubeQuery.setTime(Time.THIS_WEEK);
 			youtubeQuery.setOrderBy(YouTubeQuery.OrderBy.VIEW_COUNT);
-			youtubeQuery.setMaxResults(10);
+			youtubeQuery.setMaxResults(50);
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	@Override
@@ -53,9 +53,11 @@ public class Youtube implements Source{
 		YouTubeService service = new YouTubeService("irproject-0.1");
 		VideoFeed videoFeed;
 		try {
-			
+
 			videoFeed = service.query(youtubeQuery, VideoFeed.class);
 			List<SearchDoc> docs = docsFromVideoFeed(videoFeed, true);
+			docs = Ranking.setRelativeScore(docs);
+			docs = Ranking.getTopResults(docs, 50);
 			return Ranking.setResultScore(docs);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -64,7 +66,7 @@ public class Youtube implements Source{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
@@ -87,15 +89,15 @@ public class Youtube implements Source{
 		//doc.setPubliDate(new Date(year, , date, hrs, min, sec));
 		Date df = new Date(mediaGroup.getUploaded().toStringRfc822());
 		doc.setPubliDate(df);
-	
+
 		return doc;
 	}
 
 	public static void printVideoEntry(VideoEntry videoEntry, boolean detailed) {
-//		System.out.println("Title: " + videoEntry.getTitle().getPlainText());
+		//		System.out.println("Title: " + videoEntry.getTitle().getPlainText());
 
 		if(videoEntry.isDraft()) {
-//			System.out.println("Video is not live");
+			//			System.out.println("Video is not live");
 			YtPublicationState pubState = videoEntry.getPublicationState();
 			if(pubState.getState() == YtPublicationState.State.PROCESSING) {
 				System.out.println("Video is still being processed.");
